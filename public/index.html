@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Scrobble</title>
+    <link rel="stylesheet" href="index.css" />
+    <script type="module" src="dist/index.js" defer></script>
+  </head>
+  <body>
+    <section id="searchSection">
+      <h3>Search</h3>
+      <label for="search">
+        Search
+        <input
+          id="search"
+          type="text"
+          role="combobox"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          aria-controls="recommendations"
+        />
+        <div id="recommendations" role="listbox"></div>
+      </label>
+
+      <div id="queue"></div>
+    </section>
+
+    <section id="manualSection">
+      <h3>Manual</h3>
+      <label for="trackName">
+        Track Name
+        <input id="trackName" type="text" />
+      </label>
+
+      <label for="artistName">
+        Artist Name
+        <input id="artistName" type="text" />
+      </label>
+
+      <label for="albumName">
+        Album Name
+        <input id="albumName" type="text" />
+      </label>
+
+      <label for="albumArtist">
+        Album Artist
+        <input id="albumArtist" type="text" />
+      </label>
+    </section>
+
+    <button id="scrobble">Scrobble</button>
+    <div class="cpi"></div>
+  </body>
+</html>

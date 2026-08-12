@@ -1,0 +1,11 @@
+{
+  "name": "scrobble-it",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc --watch & npx live-server public"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
