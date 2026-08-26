@@ -1,4 +1,5 @@
 import { createSignal } from "../../util/state.js";
+import Spacer from "../basic/Spacer.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
 import ScrobbleButton from "./ScrobbleButton.js";
@@ -22,6 +23,7 @@ const ManualSection = (): HTMLElement => {
   return (
     <section id="manualSection">
       <h3 class="text-2xl font-bold">Manual</h3>
+      <Spacer />
       <form id="manualForm" class="flex flex-col gap-4" onsubmit={handleSubmit}>
         <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
         <ControlledInput id="artistName" label="Artist Name" value={artistName} error={artistNameError} required />
