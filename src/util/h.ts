@@ -21,6 +21,16 @@ export function h<K extends keyof HTMLElementTagNameMap>(
         for (const [event, handler] of Object.entries(val)) {
           el.addEventListener(event, handler as EventListener);
         }
+      } else if (key === "classList" && typeof val === "object") {
+        for (const [className, condition] of Object.entries(val)) {
+          if (typeof condition === "function") {
+            createEffect(() => {
+              el.classList.toggle(className, Boolean((condition as () => any)()));
+            });
+          } else {
+            el.classList.toggle(className, Boolean(condition));
+          }
+        }
       } else if (typeof val === "function" && !key.startsWith("on")) {
         createEffect(() => {
           const res = val();
