@@ -1,4 +1,6 @@
 import { Signal } from "../util/state.js";
+import Field from "./basic/Field.js";
+import TextInput from "./basic/TextInput.js";
 
 type ControlledInputProps = {
   id: string;
@@ -7,6 +9,7 @@ type ControlledInputProps = {
   value: Signal<string>;
   error: Signal<string | undefined>;
   required?: boolean;
+  disabled?: boolean;
   placeholder?: string | Signal<string>;
 };
 
@@ -18,22 +21,22 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
   };
 
   return (
-    <div class="field">
-      <label htmlFor={props.id} class={props.required ? "required" : ""}>
-        {props.label}
-      </label>
-      <input
+    <Field
+      label={props.label}
+      disabled={props.disabled}
+      inputId={props.id}
+      required={props.required}
+      error={props.error}
+    >
+      <TextInput
         id={props.id}
-        type={props.type ?? "text"}
         value={props.value}
+        error={props.error}
+        disabled={props.disabled}
         placeholder={props.placeholder ?? ""}
-        class={() => (props.error() ? "error" : "")}
-        on={{ input: handleInput }}
+        onInput={handleInput}
       />
-      <span id={`${props.id}-error`} class={() => `error-message ${props.error() ? "" : "hidden"}`}>
-        {() => props.error() ?? ""}
-      </span>
-    </div>
+    </Field>
   );
 };
 
