@@ -2,6 +2,8 @@ import { searchTrack } from "../../api/lastfm.js";
 import { radioGroup } from "../../util/radio.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import { debounce } from "../../util/util.js";
+import Field from "../basic/Field.js";
+import TextInput from "../basic/TextInput.js";
 import SearchAutocomplete from "./SearchAutocomplete.js";
 
 export type SearchResult = {
@@ -17,6 +19,7 @@ type SearchInputProps = {
 
 const SearchInput = (props: SearchInputProps): HTMLElement => {
   const query = createSignal("");
+  const error = createSignal<string | undefined>(undefined);
   const results = createSignal<SearchResult[]>([]);
   const isFocused = createSignal(false);
 
@@ -50,17 +53,19 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
   });
 
   const inputEl = (
-    <input
+    <TextInput
       id={props.id}
       type="text"
       role="combobox"
+      placeholder="Search"
       aria-expanded={() => (isFocused() && results().length > 0 ? "true" : "false")}
       aria-haspopup="listbox"
       aria-autocomplete="list"
+      value={query}
+      error={error}
       on={{
         focusin: () => isFocused.set(true),
         focusout: () => isFocused.set(false),
-        input: (e: Event) => query.set((e.target as HTMLInputElement).value),
       }}
     />
   ) as HTMLInputElement;
@@ -78,13 +83,10 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
   });
 
   return (
-    <div class="field">
-      <label class="label" aria-label="search">
-        Search
-      </label>
+    <Field class="relative" label="Search" inputId="search" error={error}>
       {inputEl}
       {recommendationsEl}
-    </div>
+    </Field>
   );
 };
 

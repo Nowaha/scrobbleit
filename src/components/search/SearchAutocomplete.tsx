@@ -1,6 +1,6 @@
 import { fetchImageUrl } from "../../api/iTunes.js";
-import { createRecommendationElement } from "../../util/elements.js";
 import { createEffect, Signal } from "../../util/state.js";
+import Recommendation from "./Recommendation.js";
 import { SearchResult } from "./SearchInput.js";
 
 type SearchAutocompleteProps = {
@@ -15,16 +15,23 @@ type SearchAutocompleteProps = {
 };
 
 const SearchAutocomplete = (props: SearchAutocompleteProps) => {
-  const container = <div id={props.id} role="listbox" />;
+  const container = (
+    <div id={props.id} role="listbox" class="absolute top-full z-10 flex flex-col gap-0.5 rounded-sm bg-ctp-surface0" />
+  );
 
   createEffect(() => {
     const results = props.results();
     container.replaceChildren();
 
     const items = results.map((result) => {
-      const itemElement = createRecommendationElement(result.artist, result.name, result.listeners, () =>
-        fetchImageUrl(result.artist, result.name),
-      );
+      const itemElement = (
+        <Recommendation
+          artist={result.artist}
+          track={result.name}
+          listeners={result.listeners}
+          imageUrlFetcher={() => fetchImageUrl(result.artist, result.name)}
+        />
+      ) as HTMLElement;
       return { data: result, element: itemElement };
     });
 
