@@ -1,6 +1,7 @@
 :root {
   --text: #ffffff;
   --accent: #cba6f7;
+  --error: #f38ba8;
   --background: #2f2f2f;
 }
 
@@ -23,12 +24,39 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-label:has(input) {
+.field {
   position: relative;
   display: flex;
   flex-direction: column;
+  width: fit-content;
   gap: 2px;
-  font-weight: bold;
+
+  label {
+    font-weight: bold;
+
+    &.required::after {
+      content: "*";
+      font-weight: normal;
+      display: inline-block;
+      margin-left: 4px;
+      color: var(--error);
+    }
+  }
+
+  & .error-message {
+    color: var(--error);
+    margin-top: 2px;
+    font-weight: normal;
+    font-size: 0.9rem;
+  }
+
+  &:has(.error-message) {
+    margin-bottom: 8px;
+  }
+}
+
+label:has(#search) {
+  position: relative;
 }
 
 input[type="text"] {
@@ -38,6 +66,10 @@ input[type="text"] {
   padding: 8px;
   border-radius: 8px;
   width: 32ch;
+
+  &.error {
+    border-color: var(--error);
+  }
 }
 
 #recommendations {

@@ -1,36 +1,4 @@
-import { State, useState } from "./state.js";
 import { numberFormat, trackToId } from "./util.js";
-
-export const byId = <T extends HTMLElement>(id: string) =>
-  document.getElementById(id) as T;
-
-export const withState = (id: string, initialValue?: string) => {
-  const element = byId<HTMLInputElement>(id);
-  const state = useState(initialValue ?? "");
-  const attached = attachState(element, state);
-  return {
-    element,
-    value: state.get,
-    setValue: state.set,
-    listen: state.listen,
-    detach: attached.detach,
-  };
-};
-
-export const attachState = (
-  element: HTMLInputElement,
-  state: State<string>,
-) => {
-  const onInput = () => state.set(element.value);
-  element.addEventListener("input", onInput);
-  const unlisten = state.listen((value) => (element.value = value));
-  return {
-    detach: () => {
-      unlisten();
-      element.removeEventListener("input", onInput);
-    },
-  };
-};
 
 export const createRecommendationElement = (
   artist: string,

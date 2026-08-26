@@ -1,29 +1,40 @@
-type Listener<T> = (current: T, previous: T) => void;
+type Subscriber = () => void;
+let activeEffect: Subscriber | null = null;
 
-export type State<T> = {
-  get: () => T;
-  set: (newValue: T) => void;
-  listen: (listener: Listener<T>) => () => void;
+export type Signal<T> = {
+  (): T;
+  set: (newValue: T | ((prev: T) => T)) => void;
 };
 
-export const useState = <T>(initialValue: T): State<T> => {
-  let value: T = initialValue;
-  const listeners = new Set<Listener<T>>();
+export const createSignal = <T>(initialValue: T): Signal<T> => {
+  let value = initialValue;
+  const subscribers = new Set<Subscriber>();
 
-  const set = (newValue: T) => {
-    const previous = value;
-    value = newValue;
-    listeners.forEach((l) => l(value, previous));
+  const read = () => {
+    if (activeEffect) subscribers.add(activeEffect);
+    return value;
   };
 
-  const listen = (listener: Listener<T>) => {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
+  read.set = (newValue: T | ((prev: T) => T)) => {
+    const next =
+      typeof newValue === "function" ? (newValue as Function)(value) : newValue;
+    if (next !== value) {
+      value = next;
+      subscribers.forEach((fn) => fn());
+    }
   };
 
-  return {
-    get: () => value,
-    set,
-    listen,
-  };
+  return read;
 };
+
+export function createEffect(fn: () => void) {
+  const execute = () => {
+    activeEffect = execute;
+    try {
+      fn();
+    } finally {
+      activeEffect = null;
+    }
+  };
+  execute();
+}

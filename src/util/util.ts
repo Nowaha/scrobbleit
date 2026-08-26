@@ -1,13 +1,16 @@
 export const numberFormat = new Intl.NumberFormat("nl-NL");
 
-export const debounce = <T extends (...args: unknown[]) => void>(
-  fn: T,
+export const debounce = <Args extends any[], Return>(
+  fn: (...args: Args) => Return,
   delay: number,
-): ((...args: Parameters<T>) => void) => {
+): ((...args: Args) => void) => {
   let timer: ReturnType<typeof setTimeout>;
-  return (...args) => {
+
+  return (...args: Args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
   };
 };
 

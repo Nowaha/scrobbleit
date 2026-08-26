@@ -1,7 +1,7 @@
 export const radioGroup = <T>(
   combobox: HTMLInputElement,
   items: { data: T; element: HTMLElement }[],
-  onSelect: (item: T) => void,
+  onSelect?: (item: T) => void,
 ) => {
   let index = 0;
 
@@ -18,13 +18,13 @@ export const radioGroup = <T>(
     element.addEventListener("mousedown", (e) => e.preventDefault());
     element.addEventListener("click", () => {
       select(i);
-      onSelect(data);
+      onSelect?.(data);
     });
   });
 
   return {
     next: () => select(Math.min(index + 1, items.length - 1)),
     prev: () => select(Math.max(index - 1, 0)),
-    select: () => onSelect(items[index].data),
+    select: () => onSelect?.(items[index].data),
   };
 };
