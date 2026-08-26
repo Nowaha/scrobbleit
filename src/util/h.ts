@@ -3,12 +3,17 @@ import { createEffect, Signal } from "./state.js";
 type Bindable<T> = T | Signal<T> | (() => T);
 type Child =
   Node | string | number | Signal<any> | (() => any) | null | undefined;
+type ComponentFunction<P = any> = (props: P, ...children: any[]) => HTMLElement;
 
 export function h<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
+  tag: K | ComponentFunction,
   props?: Record<string, any> | null,
   ...children: Child[]
-): HTMLElementTagNameMap[K] {
+): HTMLElement {
+  if (typeof tag === "function") {
+    return tag(props ?? {}, ...children);
+  }
+
   const el = document.createElement(tag);
 
   if (props) {
@@ -52,6 +57,15 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   }
 
   return el;
+}
+
+declare global {
+  namespace JSX {
+    type Element = HTMLElement;
+    interface IntrinsicElements {
+      [elemName: string]: Record<string, any>;
+    }
+  }
 }
 
 export default h;

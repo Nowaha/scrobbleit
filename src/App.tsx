@@ -1,0 +1,20 @@
+import ManualSection from "./components/manual/ManualSection.js";
+import SearchSection from "./components/SearchSection.js";
+import h from "./util/h.js";
+
+const App = () => (
+  <div>
+    <header>
+      <h1>s.crobble.it</h1>
+    </header>
+    <main>
+      <SearchSection />
+      <ManualSection />
+    </main>
+    <footer>
+      <span>created by Lyulf</span>
+    </footer>
+  </div>
+);
+
+export default App;

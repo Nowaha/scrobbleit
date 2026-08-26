@@ -5,7 +5,9 @@
     "strict": true,
     "sourceMap": true,
     "rootDir": "src",
-    "outDir": "public/dist"
+    "outDir": "public/dist",
+    "jsx": "react",
+    "jsxFactory": "h"
   },
   "include": [
     "src"
