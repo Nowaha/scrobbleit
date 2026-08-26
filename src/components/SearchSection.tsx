@@ -1,4 +1,4 @@
-import Spacer from "./basic/Spacer.js";
+import Section from "./basic/Section.js";
 import SearchInput, { SearchResult } from "./search/SearchInput.js";
 
 type SearchSectionProps = {
@@ -9,13 +9,10 @@ const SearchSection = (props?: SearchSectionProps) => {
   const queueElement = <div id="queue" />;
 
   return (
-    <section id="searchSection">
-      <h3 class="text-2xl font-bold">Search</h3>
-      <p class="text-ctp-subtext0">Start searching for a track to easily scrobble.</p>
-      <Spacer />
+    <Section id="searchSection" title="Search" icon="fa-search" description="Start searching for a track to easily scrobble">
       <SearchInput id="searchInput" onResultSelected={props?.onResultSelected} />
       {queueElement}
-    </section>
+    </Section>
   );
 };
 

@@ -1,4 +1,5 @@
 import { createSignal } from "../../util/state.js";
+import Section from "../basic/Section.js";
 import Spacer from "../basic/Spacer.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
@@ -21,10 +22,12 @@ const ManualSection = (): HTMLElement => {
   };
 
   return (
-    <section id="manualSection">
-      <h3 class="text-2xl font-bold">Manual</h3>
-      <p class="text-ctp-subtext0">Manually enter the details of the track you'd like to scrobble.</p>
-      <Spacer />
+    <Section
+      id="manualSection"
+      icon="fa-record-vinyl"
+      title="Manual"
+      description="Manually enter the details of the track you'd like to scrobble."
+    >
       <form id="manualForm" class="flex flex-col gap-4" onsubmit={handleSubmit}>
         <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
         <ControlledInput id="artistName" label="Artist Name" value={artistName} error={artistNameError} required />
@@ -39,7 +42,7 @@ const ManualSection = (): HTMLElement => {
         <ScrobbleButton />
         <SpinningCircle />
       </form>
-    </section>
+    </Section>
   );
 };
 
