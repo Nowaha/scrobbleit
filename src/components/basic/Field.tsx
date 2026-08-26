@@ -28,7 +28,7 @@ const Field = (props: FieldProps) => {
 
   return (
     <div class={`flex flex-col ${props.class ?? ""}`}>
-      <label htmlFor={props.inputId} class="text-ctp-subtext1">
+      <label htmlFor={props.inputId} class="mb-0.5 text-ctp-subtext1">
         {props.label}
         {props.required ? <span class="ml-1 text-ctp-red">*</span> : undefined}
       </label>
