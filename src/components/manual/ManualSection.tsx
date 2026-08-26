@@ -23,6 +23,7 @@ const ManualSection = (): HTMLElement => {
   return (
     <section id="manualSection">
       <h3 class="text-2xl font-bold">Manual</h3>
+      <p class="text-ctp-subtext0">Manually enter the details of the track you'd like to scrobble.</p>
       <Spacer />
       <form id="manualForm" class="flex flex-col gap-4" onsubmit={handleSubmit}>
         <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
