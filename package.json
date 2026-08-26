@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc --watch & npx live-server public"
+    "dev": "concurrently \"tsc --watch\" \"npx live-server public\" \"tailwindcss -i ./src/public/index.css -o ./public/index.css --watch\"",
+    "build:ts": "tsc",
+    "build:css": "npx @tailwindcss/cli -i ./src/public/index.css -o ./public/index.css"
   },
   "devDependencies": {
+    "@catppuccin/tailwindcss": "^1.0.0",
+    "concurrently": "^10.0.5",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
   }
 }

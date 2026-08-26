@@ -1,11 +1,23 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Scrobble</title>
-    <link rel="stylesheet" href="index.css" />
-    <script type="module" src="dist/index.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>s.crobble.it</title>
+
+    <link rel="stylesheet" href="/index.css" />
+    <script src="/dist/index.js" type="module"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@loafsx/jsx-runtime": "/dist/util/jsx-runtime.js",
+          "@loafsx/jsx-dev-runtime": "/dist/util/jsx-runtime.js"
+        }
+      }
+    </script>
   </head>
-  <body>
+  <body class="bg-ctp-base text-ctp-text">
     <div id="root"></div>
   </body>
 </html>

@@ -1,6 +1,5 @@
 import { fetchImageUrl } from "../../api/iTunes.js";
 import { createRecommendationElement } from "../../util/elements.js";
-import h from "../../util/h.js";
 import { createEffect, Signal } from "../../util/state.js";
 import { SearchResult } from "./SearchInput.js";
 
@@ -16,14 +15,11 @@ type SearchAutocompleteProps = {
 };
 
 const SearchAutocomplete = (props: SearchAutocompleteProps) => {
-  const container = h("div", {
-    id: props.id,
-    role: "listbox",
-  });
+  const container = <div id={props.id} role="listbox" />;
 
   createEffect(() => {
     const results = props.results();
-    container.replaceChildren(); // Fast native clear
+    container.replaceChildren();
 
     const items = results.map((result) => {
       const itemElement = createRecommendationElement(

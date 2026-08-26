@@ -4,7 +4,7 @@ import h from "./util/h.js";
 
 const App = () => (
   <div>
-    <header>
+    <header class="bg-ctp-crust border-b border-ctp-surface0 h-14 flex items-center px-4">
       <h1>s.crobble.it</h1>
     </header>
     <main>

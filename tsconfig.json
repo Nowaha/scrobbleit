@@ -6,10 +6,18 @@
     "sourceMap": true,
     "rootDir": "src",
     "outDir": "public/dist",
-    "jsx": "react",
-    "jsxFactory": "h"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@loafsx",
+    "paths": {
+      "@loafsx/jsx-runtime": [
+        "./src/util/jsx-runtime.ts"
+      ],
+      "@loafsx/jsx-dev-runtime": [
+        "./src/util/jsx-runtime.ts"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src/**/*"
   ]
 }

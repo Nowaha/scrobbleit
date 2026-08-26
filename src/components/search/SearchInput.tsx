@@ -1,5 +1,4 @@
 import { searchTrack } from "../../api/lastfm.js";
-import { h } from "../../util/h.js";
 import { radioGroup } from "../../util/radio.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import { debounce } from "../../util/util.js";
@@ -21,7 +20,6 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
   const results = createSignal<SearchResult[]>([]);
   const isFocused = createSignal(false);
 
-  // Debounced API search worker bound directly to the `query` signal
   let busy = false;
   const doSearch = debounce(async (currentQuery: string) => {
     if (busy) return;
@@ -47,26 +45,27 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
     }
   }, 300);
 
-  // Trigger search whenever `query` updates
   createEffect(() => {
     doSearch(query());
   });
 
-  // Direct reference to input node
-  const inputEl = h("input", {
-    id: props.id,
-    type: "text",
-    role: "combobox",
-    ariaExpanded: () =>
-      isFocused() && results().length > 0 ? "true" : "false",
-    ariaHasPopup: "listbox",
-    ariaAutoComplete: "list",
-    on: {
-      focusin: () => isFocused.set(true),
-      focusout: () => isFocused.set(false),
-      input: (e: Event) => query.set((e.target as HTMLInputElement).value),
-    },
-  }) as HTMLInputElement;
+  const inputEl = (
+    <input
+      id={props.id}
+      type="text"
+      role="combobox"
+      aria-expanded={() =>
+        isFocused() && results().length > 0 ? "true" : "false"
+      }
+      aria-haspopup="listbox"
+      aria-autocomplete="list"
+      on={{
+        focusin: () => isFocused.set(true),
+        focusout: () => isFocused.set(false),
+        input: (e: Event) => query.set((e.target as HTMLInputElement).value),
+      }}
+    />
+  ) as HTMLInputElement;
 
   const recommendationsEl = SearchAutocomplete({
     id: "recommendations",
@@ -76,17 +75,18 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
     },
   });
 
-  // Reactively toggle dropdown visibility without manual DOM queries
   createEffect(() => {
     recommendationsEl.style.display = isFocused() ? "block" : "none";
   });
 
-  return h(
-    "div",
-    { class: "field" },
-    h("label", { class: "label", ariaLabel: "search" }, "Search"),
-    inputEl,
-    recommendationsEl,
+  return (
+    <div class="field">
+      <label class="label" aria-label="search">
+        Search
+      </label>
+      {inputEl}
+      {recommendationsEl}
+    </div>
   );
 };
 

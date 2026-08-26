@@ -1,4 +1,3 @@
-import { h } from "../../util/h.js";
 import { createSignal } from "../../util/state.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
@@ -20,43 +19,41 @@ const ManualSection = (): HTMLElement => {
     if (!artistName()) artistNameError.set("Artist name is required");
   };
 
-  return h(
-    "section",
-    { id: "manualSection" },
-    h("h3", null, "Manual"),
-    h(
-      "form",
-      { id: "manualForm", on: { submit: handleSubmit } },
-      ControlledInput({
-        id: "trackName",
-        label: "Track Name",
-        value: trackName,
-        error: trackNameError,
-        required: true,
-      }),
-      ControlledInput({
-        id: "artistName",
-        label: "Artist Name",
-        value: artistName,
-        error: artistNameError,
-        required: true,
-      }),
-      ControlledInput({
-        id: "albumName",
-        label: "Album Name",
-        value: albumName,
-        error: albumNameError,
-      }),
-      ControlledInput({
-        id: "albumArtist",
-        label: "Album Artist",
-        value: albumArtist,
-        error: albumArtistError,
-        required: true,
-      }),
-      ScrobbleButton(),
-      SpinningCircle(),
-    ),
+  return (
+    <section id="manualSection">
+      <h3>Manual</h3>
+      <form id="manualForm" onsubmit={handleSubmit}>
+        <ControlledInput
+          id="trackName"
+          label="Track Name"
+          value={trackName}
+          error={trackNameError}
+          required
+        />
+        <ControlledInput
+          id="artistName"
+          label="Artist Name"
+          value={artistName}
+          error={artistNameError}
+          required
+        />
+        <ControlledInput
+          id="albumName"
+          label="Album Name"
+          value={albumName}
+          error={albumNameError}
+        />
+        <ControlledInput
+          id="albumArtist"
+          label="Album Artist"
+          value={albumArtist}
+          error={albumArtistError}
+          placeholder={artistName}
+        />
+        <ScrobbleButton />
+        <SpinningCircle />
+      </form>
+    </section>
   );
 };
 

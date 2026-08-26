@@ -23,7 +23,6 @@ export function h<K extends keyof HTMLElementTagNameMap>(
           el.addEventListener(event, handler as EventListener);
         }
       } else if (typeof val === "function" && !key.startsWith("on")) {
-        // Reactive property binding
         createEffect(() => {
           const res = val();
           if (key === "class") el.className = res || "";
@@ -57,15 +56,6 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   }
 
   return el;
-}
-
-declare global {
-  namespace JSX {
-    type Element = HTMLElement;
-    interface IntrinsicElements {
-      [elemName: string]: Record<string, any>;
-    }
-  }
 }
 
 export default h;
