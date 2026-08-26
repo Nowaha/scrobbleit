@@ -22,7 +22,7 @@ const ManualSection = (): HTMLElement => {
   return (
     <section id="manualSection">
       <h3>Manual</h3>
-      <form id="manualForm" onsubmit={handleSubmit}>
+      <form id="manualForm" class="flex flex-col gap-4" onsubmit={handleSubmit}>
         <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
         <ControlledInput id="artistName" label="Artist Name" value={artistName} error={artistNameError} required />
         <ControlledInput id="albumName" label="Album Name" value={albumName} error={albumNameError} />
