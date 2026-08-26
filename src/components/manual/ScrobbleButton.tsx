@@ -1,11 +1,13 @@
+import Button from "../basic/Button.js";
+
 type ScrobbleButtonProps = {
   onClick?: () => void;
 };
 
 const ScrobbleButton = (props: ScrobbleButtonProps = {}) => (
-  <button id="scrobble" type="submit" onclick={props.onClick}>
+  <Button variant="primary" id="scrobble" type="submit" onclick={props.onClick}>
     Scrobble
-  </button>
+  </Button>
 );
 
 export default ScrobbleButton;
