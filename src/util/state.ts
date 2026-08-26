@@ -16,8 +16,7 @@ export const createSignal = <T>(initialValue: T): Signal<T> => {
   };
 
   read.set = (newValue: T | ((prev: T) => T)) => {
-    const next =
-      typeof newValue === "function" ? (newValue as Function)(value) : newValue;
+    const next = typeof newValue === "function" ? (newValue as Function)(value) : newValue;
     if (next !== value) {
       value = next;
       subscribers.forEach((fn) => fn());

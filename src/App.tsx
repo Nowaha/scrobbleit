@@ -1,19 +1,12 @@
-import ManualSection from "./components/manual/ManualSection.js";
-import SearchSection from "./components/SearchSection.js";
-import h from "./util/h.js";
+import Footer from "./components/layout/Footer.js";
+import Header from "./components/layout/Header.js";
+import Main from "./components/layout/Main.js";
 
 const App = () => (
-  <div>
-    <header class="bg-ctp-crust border-b border-ctp-surface0 h-14 flex items-center px-4">
-      <h1>s.crobble.it</h1>
-    </header>
-    <main>
-      <SearchSection />
-      <ManualSection />
-    </main>
-    <footer>
-      <span>created by Lyulf</span>
-    </footer>
+  <div class="flex h-full flex-col">
+    <Header />
+    <Main />
+    <Footer />
   </div>
 );
 

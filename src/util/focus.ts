@@ -1,8 +1,6 @@
 export const focusNext = (el: HTMLElement) => {
   const focusable = Array.from(
-    document.querySelectorAll<HTMLElement>(
-      'input, button, select, textarea, [tabindex]:not([tabindex="-1"])',
-    ),
+    document.querySelectorAll<HTMLElement>('input, button, select, textarea, [tabindex]:not([tabindex="-1"])'),
   );
   const index = focusable.indexOf(el);
   focusable[index + 1]?.focus();

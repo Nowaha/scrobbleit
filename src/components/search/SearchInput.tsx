@@ -54,9 +54,7 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
       id={props.id}
       type="text"
       role="combobox"
-      aria-expanded={() =>
-        isFocused() && results().length > 0 ? "true" : "false"
-      }
+      aria-expanded={() => (isFocused() && results().length > 0 ? "true" : "false")}
       aria-haspopup="listbox"
       aria-autocomplete="list"
       on={{

@@ -1,5 +1,3 @@
-const Header = () => (
-  <header class="bg-ctp-crust border-b border-ctp-surface0 h-14 flex items-center px-4"></header>
-);
+const Header = () => <header class="flex h-14 items-center border-b border-ctp-surface0 bg-ctp-crust px-4"></header>;
 
 export default Header;

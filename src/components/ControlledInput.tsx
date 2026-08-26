@@ -30,10 +30,7 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
         class={() => (props.error() ? "error" : "")}
         on={{ input: handleInput }}
       />
-      <span
-        id={`${props.id}-error`}
-        class={() => `error-message ${props.error() ? "" : "hidden"}`}
-      >
+      <span id={`${props.id}-error`} class={() => `error-message ${props.error() ? "" : "hidden"}`}>
         {() => props.error() ?? ""}
       </span>
     </div>

@@ -22,11 +22,8 @@ const SearchAutocomplete = (props: SearchAutocompleteProps) => {
     container.replaceChildren();
 
     const items = results.map((result) => {
-      const itemElement = createRecommendationElement(
-        result.artist,
-        result.name,
-        result.listeners,
-        () => fetchImageUrl(result.artist, result.name),
+      const itemElement = createRecommendationElement(result.artist, result.name, result.listeners, () =>
+        fetchImageUrl(result.artist, result.name),
       );
       return { data: result, element: itemElement };
     });

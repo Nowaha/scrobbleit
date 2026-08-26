@@ -1,0 +1,12 @@
+{
+  "printWidth": 120,
+  "jsxSingleQuote": false,
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindAttributes": [
+    "className",
+    "classList"
+  ],
+  "tailwindStylesheet": "./src/public/index.css"
+}

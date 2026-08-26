@@ -5,11 +5,17 @@
   "scripts": {
     "dev": "concurrently \"tsc --watch\" \"npx live-server public\" \"tailwindcss -i ./src/public/index.css -o ./public/index.css --watch\"",
     "build:ts": "tsc",
-    "build:css": "npx @tailwindcss/cli -i ./src/public/index.css -o ./public/index.css"
+    "build:css": "npx @tailwindcss/cli -i ./src/public/index.css -o ./public/index.css",
+    "format": "prettier --write \"src/**/*.{ts,tsx,html,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,html,css}\"",
+    "format:fast": "prettierd restart && prettierd \"src/**/*.{ts,tsx,html,css}\""
   },
   "devDependencies": {
     "@catppuccin/tailwindcss": "^1.0.0",
+    "@fsouza/prettierd": "^0.29.0",
     "concurrently": "^10.0.5",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^7.0.2"
   },
   "dependencies": {

@@ -150,11 +150,7 @@ button {
   border-radius: 100%;
   width: 16px;
   height: 16px;
-  background: conic-gradient(
-    from var(--angle),
-    var(--accent) 20%,
-    var(--background) 20%
-  );
+  background: conic-gradient(from var(--angle), var(--accent) 20%, var(--background) 20%);
   animation: spinBackground 1s linear infinite;
 }
 

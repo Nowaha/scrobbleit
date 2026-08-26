@@ -1,8 +1,7 @@
 import { createEffect, Signal } from "./state.js";
 
 type Bindable<T> = T | Signal<T> | (() => T);
-type Child =
-  Node | string | number | Signal<any> | (() => any) | null | undefined;
+type Child = Node | string | number | Signal<any> | (() => any) | null | undefined;
 type ComponentFunction<P = any> = (props: P, ...children: any[]) => HTMLElement;
 
 export function h<K extends keyof HTMLElementTagNameMap>(
@@ -47,11 +46,7 @@ export function h<K extends keyof HTMLElementTagNameMap>(
       });
       el.appendChild(textNode);
     } else {
-      el.append(
-        typeof child === "number"
-          ? document.createTextNode(String(child))
-          : child,
-      );
+      el.append(typeof child === "number" ? document.createTextNode(String(child)) : child);
     }
   }
 
