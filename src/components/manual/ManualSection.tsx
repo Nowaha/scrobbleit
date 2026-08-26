@@ -1,3 +1,4 @@
+import { createInputFocusGroup } from "../../util/focus.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import Button from "../basic/Button.js";
 import Section from "../basic/Section.js";
@@ -35,6 +36,11 @@ const ManualSection = (): HTMLElement => {
     if (!trackName()) trackNameError.set("Track name is required");
     if (!artistName()) artistNameError.set("Artist name is required");
   };
+
+  queueMicrotask(() => {
+    const form = document.getElementById("manualForm");
+    createInputFocusGroup(form!);
+  });
 
   return (
     <Section

@@ -20,6 +20,11 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
     if (props.error()) props.error.set(undefined);
   };
 
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+  };
+
   return (
     <Field
       label={props.label}
@@ -35,6 +40,7 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
         disabled={props.disabled}
         placeholder={props.placeholder ?? ""}
         onInput={handleInput}
+        on={{ keydown: onKeyDown }}
       />
     </Field>
   );
