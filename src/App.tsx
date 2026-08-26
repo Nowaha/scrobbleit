@@ -3,7 +3,7 @@ import Header from "./components/layout/Header.js";
 import Main from "./components/layout/Main.js";
 
 const App = () => (
-  <div class="flex h-full flex-col">
+  <div class="flex min-h-dvh flex-col items-center">
     <Header />
     <Main />
     <Footer />

@@ -9,7 +9,7 @@ const SearchSection = (props?: SearchSectionProps) => {
 
   return (
     <section id="searchSection">
-      <h3>Search</h3>
+      <h3 class="text-2xl font-bold">Search</h3>
       <SearchInput id="searchInput" onResultSelected={props?.onResultSelected} />
       {queueElement}
     </section>
