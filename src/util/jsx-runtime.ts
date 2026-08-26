@@ -3,6 +3,10 @@ import { h } from "./h.js";
 export function jsx(type: any, props: any, key?: any) {
   const { children, ...restProps } = props || {};
 
+  if (typeof type === "function") {
+    return type({ ...restProps, children });
+  }
+
   if (children !== undefined) {
     const childrenArray = Array.isArray(children) ? children : [children];
     return h(type, restProps, ...childrenArray);
