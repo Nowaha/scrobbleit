@@ -1,6 +1,7 @@
-import { createSignal } from "../../util/state.js";
+import { createEffect, createSignal } from "../../util/state.js";
+import Button from "../basic/Button.js";
 import Section from "../basic/Section.js";
-import Spacer from "../basic/Spacer.js";
+import Show from "../basic/Show.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
 import ScrobbleButton from "./ScrobbleButton.js";
@@ -14,6 +15,20 @@ const ManualSection = (): HTMLElement => {
   const albumNameError = createSignal<string | undefined>(undefined);
   const albumArtist = createSignal("");
   const albumArtistError = createSignal<string | undefined>(undefined);
+
+  const hasEntries = createSignal(false);
+  createEffect(() => {
+    hasEntries.set(
+      trackName() !== "" ||
+        artistName() !== "" ||
+        albumName() !== "" ||
+        albumArtist() !== "" ||
+        trackNameError() !== undefined ||
+        artistNameError() !== undefined ||
+        albumNameError() !== undefined ||
+        albumArtistError() !== undefined,
+    );
+  });
 
   const handleSubmit = (e: Event) => {
     e.preventDefault();
@@ -39,8 +54,32 @@ const ManualSection = (): HTMLElement => {
           error={albumArtistError}
           placeholder={artistName}
         />
-        <ScrobbleButton />
-        <SpinningCircle />
+        <div class="flex w-full justify-end gap-4">
+          <Show when={hasEntries}>
+            <Button
+              variant="secondary"
+              type="reset"
+              on={{
+                click: () => {
+                  trackName.set("");
+                  trackNameError.set(undefined);
+                  artistName.set("");
+                  artistNameError.set(undefined);
+                  albumName.set("");
+                  albumNameError.set(undefined);
+                  albumArtist.set("");
+                  albumArtistError.set(undefined);
+                },
+              }}
+            >
+              Clear
+            </Button>
+          </Show>
+          <div>
+            <SpinningCircle />
+            <ScrobbleButton />
+          </div>
+        </div>
       </form>
     </Section>
   );
