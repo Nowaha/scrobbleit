@@ -12,7 +12,7 @@ const Profile = ({ avatar, username, authenticatedAt }: ProfileProps) => (
   <a class="group" href={`https://last.fm/user/${username}`} target="_blank">
     <div class="flex gap-4">
       <img class="w-16 rounded-xl shadow-sm shadow-ctp-mantle" src={avatar} />
-      <div class="flex flex-col justify-evenly gap-1">
+      <div class="flex flex-col justify-evenly">
         <a class="flex items-center text-lg leading-0 font-bold text-ctp-text no-underline group-hover:text-ctp-mauve group-hover:underline">
           {username}
           <Icon class="mb-auto ml-1 text-[10px]" icon="fa-external-link" />
