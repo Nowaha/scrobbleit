@@ -1,5 +1,10 @@
 export const numberFormat = new Intl.NumberFormat("nl-NL");
 
+export const dateFormat = new Intl.DateTimeFormat("en-GB", {
+  dateStyle: "long",
+  timeStyle: "short",
+});
+
 export const debounce = <Args extends any[], Return>(
   fn: (...args: Args) => Return,
   delay: number,
