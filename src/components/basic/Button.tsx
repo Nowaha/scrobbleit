@@ -10,9 +10,12 @@ const classes: Record<Variant, string> = {
   transparent: "", // TODO
 };
 
-const Button = ({ variant, ...rest }: ButtonProps) => {
+const Button = ({ class: cls, variant, ...rest }: ButtonProps) => {
   return (
-    <button class={`block w-fit rounded-lg px-3 py-1.5 transition-colors duration-100 ${classes[variant]}`} {...rest} />
+    <button
+      class={`block h-fit w-fit rounded-lg px-3 py-1.5 transition-colors duration-100 ${classes[variant]} ${cls ?? ""}`}
+      {...rest}
+    />
   );
 };
 
