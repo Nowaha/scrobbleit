@@ -1,5 +1,6 @@
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
-const LAST_FM_API_KEY = "63efc313966fb1f7675cd9cb4c1ad274";
+const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
+export const LAST_FM_AUTH_URL = "http://www.last.fm/api/auth/?api_key=" + LAST_FM_API_KEY;
 
 export const method = {
   artist: {
