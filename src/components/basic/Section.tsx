@@ -4,21 +4,35 @@ import Spacer from "./Spacer.js";
 type SectionProps = {
   id: string;
   icon: string;
-  title: string;
-  description: string;
+  title: HTMLElement | string;
+  titleSize?: string;
+  titleColor?: string;
+  description: HTMLElement | string;
+  descriptionSize?: string;
+  descriptionColor?: string;
   children: HTMLElement | HTMLElement[];
 };
 
-const Section = (props: SectionProps) => (
-  <section id={props.id}>
-    <h3 class="flex items-center gap-2 text-2xl font-bold text-ctp-text">
-      <Icon icon={props.icon} />
-      {props.title}
+const Section = ({
+  id,
+  icon,
+  title,
+  titleSize = "text-2xl",
+  titleColor = "text-ctp-text",
+  description,
+  descriptionSize = "text-md",
+  descriptionColor = "text-ctp-subtext0",
+  children,
+}: SectionProps) => (
+  <section id={id}>
+    <h3 class={`flex items-center gap-3 ${titleSize} font-bold ${titleColor}`}>
+      <Icon icon={icon} />
+      {title}
     </h3>
     <Spacer size="sm" />
-    <p class="text-ctp-subtext0">{props.description}</p>
+    <p class={`${descriptionSize} ${descriptionColor}`}>{description}</p>
     <Spacer />
-    {props.children}
+    {children}
   </section>
 );
 
