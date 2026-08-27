@@ -1,7 +1,7 @@
 import Link from "../basic/Link.js";
 import Section from "../basic/Section.js";
 import Spacer from "../basic/Spacer.js";
-import ControlledInput from "../ControlledInput.js";
+import LastFmButton from "./LastFmButton.js";
 
 const LoginSection = () => (
   <Section
@@ -19,7 +19,10 @@ const LoginSection = () => (
       </span>
     }
   >
+    <Spacer />
     <p class="text-ctp-mauve">Please click the button below to go to Last.fm's website and authorize yourself.</p>
+    <Spacer size="lg" />
+    <LastFmButton />
   </Section>
 );
 
