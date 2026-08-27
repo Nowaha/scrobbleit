@@ -1,7 +1,11 @@
 type IconProps = {
+  class?: string;
+  size?: string;
   icon: string;
 };
 
-const Icon = (props: IconProps) => <i class={`fa-solid ${props.icon}`} aria-hidden="true"></i>;
+const Icon = ({ class: cls, size, icon }: IconProps) => (
+  <i class={`fa-solid ${icon} ${size ?? ""} ${cls ?? ""}`} aria-hidden="true"></i>
+);
 
 export default Icon;
