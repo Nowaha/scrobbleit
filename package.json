@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"tsc --watch\" \"npx live-server public\" \"tailwindcss -i ./src/public/index.css -o ./public/index.css --watch\"",
-    "build:ts": "tsc",
-    "build:css": "npx @tailwindcss/cli -i ./src/public/index.css -o ./public/index.css",
+    "dev": "concurrently \"tsc --watch --noEmit\" \"npx live-server public\" \"yarn tailwindcss -i ./src/public/index.css -o ./public/index.css --watch\" \"yarn build:js --watch\"",
+    "typecheck": "tsc --noEmit",
+    "build:js": "esbuild src/index.ts --bundle --outfile=public/dist/index.js --format=esm --jsx=automatic --jsx-import-source=@loafsx --alias:@loafsx/jsx-runtime=./src/util/jsx-runtime.ts --alias:@loafsx/jsx-dev-runtime=./src/util/jsx-runtime.ts",
+    "build:css": "yarn tailwindcss -i ./src/public/index.css -o ./public/index.css",
+    "clean": "rm -rf public/dist public/index.css",
+    "build": "yarn clean && yarn typecheck && yarn build:js --minify --sourcemap && yarn build:css --minify",
     "format": "prettier --write \"src/**/*.{ts,tsx,html,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,html,css}\"",
     "format:fast": "prettierd restart && prettierd \"src/**/*.{ts,tsx,html,css}\""
@@ -14,6 +17,7 @@
     "@catppuccin/tailwindcss": "^1.0.0",
     "@fsouza/prettierd": "^0.29.0",
     "concurrently": "^10.0.5",
+    "esbuild": "^0.28.2",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^7.0.2"
