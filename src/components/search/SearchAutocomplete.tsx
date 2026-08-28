@@ -5,6 +5,7 @@ import { SearchResult } from "./SearchInput.js";
 
 type SearchAutocompleteProps = {
   id: string;
+  visible: Signal<boolean>;
   results: Signal<SearchResult[]>;
   onItemsChanged?: (
     items: {
@@ -15,9 +16,17 @@ type SearchAutocompleteProps = {
 };
 
 const SearchAutocomplete = (props: SearchAutocompleteProps) => {
-  const container = (
+  let container = (
     <div id={props.id} role="listbox" class="absolute top-full z-10 flex flex-col gap-0.5 rounded-sm bg-ctp-surface0" />
   );
+
+  createEffect(() => {
+    if (props.visible()) {
+      container.classList.remove("hidden");
+    } else {
+      container.classList.add("hidden");
+    }
+  });
 
   createEffect(() => {
     const results = props.results();

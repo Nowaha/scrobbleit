@@ -70,22 +70,17 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
     />
   ) as HTMLInputElement;
 
-  const recommendationsEl = SearchAutocomplete({
-    id: "recommendations",
-    results,
-    onItemsChanged: (items) => {
-      setupKeyboardNav(inputEl, items, props.onResultSelected);
-    },
-  });
-
-  createEffect(() => {
-    recommendationsEl.style.display = isFocused() ? "block" : "none";
-  });
-
   return (
     <Field class="relative" label="Search" inputId="search" error={error}>
       {inputEl}
-      {recommendationsEl}
+      <SearchAutocomplete
+        id="recommendations"
+        visible={isFocused}
+        results={results}
+        onItemsChanged={(items) => {
+          setupKeyboardNav(inputEl, items, props.onResultSelected);
+        }}
+      />
     </Field>
   );
 };
