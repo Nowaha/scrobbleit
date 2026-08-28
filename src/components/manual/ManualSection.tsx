@@ -45,7 +45,7 @@ const ManualSection = (): HTMLElement => {
   return (
     <Section
       id="manualSection"
-      icon="fa-record-vinyl"
+      icon="fa-pencil"
       title="Manual"
       description="Manually enter the details of the track you'd like to scrobble."
     >
