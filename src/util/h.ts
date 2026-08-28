@@ -14,10 +14,11 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   }
 
   const el = document.createElement(tag);
-
   if (props) {
     for (const [key, val] of Object.entries(props)) {
-      if (key === "on" && typeof val === "object") {
+      if (key === "ref") {
+        continue;
+      } else if (key === "on" && typeof val === "object") {
         for (const [event, handler] of Object.entries(val)) {
           el.addEventListener(event, handler as EventListener);
         }
@@ -57,6 +58,14 @@ export function h<K extends keyof HTMLElementTagNameMap>(
       el.appendChild(textNode);
     } else {
       el.append(typeof child === "number" ? document.createTextNode(String(child)) : child);
+    }
+  }
+
+  if (props?.ref) {
+    if (typeof props.ref === "function") {
+      props.ref(el);
+    } else if (typeof props.ref === "object" && "current" in props.ref) {
+      props.ref.current = el as any;
     }
   }
 
