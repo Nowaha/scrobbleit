@@ -25,7 +25,7 @@ const Section = ({
   children,
 }: SectionProps) => (
   <section id={id}>
-    <h3 class={`flex items-center gap-3 ${titleSize} font-bold ${titleColor}`}>
+    <h3 class={`flex items-center gap-2 ${titleSize} font-bold ${titleColor}`}>
       <Icon icon={icon} />
       {title}
     </h3>
