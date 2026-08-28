@@ -1,14 +1,9 @@
+import { authTimeStamp, lastFmImage, lastFmName } from "../../state/auth.js";
 import { dateFormat } from "../../util/util.js";
 import Icon from "../basic/Icon.js";
 
-type ProfileProps = {
-  avatar: string;
-  username: string;
-  authenticatedAt: number;
-};
-
-const Profile = ({ avatar, username, authenticatedAt }: ProfileProps) => {
-  const imageElement = <img class="w-16 rounded-xl shadow-lg shadow-ctp-mantle" src={avatar} />;
+const Profile = () => {
+  let imageElement!: HTMLImageElement;
 
   window.addEventListener("mousemove", (e) => {
     const rect = imageElement.getBoundingClientRect();
@@ -30,15 +25,21 @@ const Profile = ({ avatar, username, authenticatedAt }: ProfileProps) => {
   });
 
   return (
-    <a class="group" href={`https://last.fm/user/${username}`} target="_blank">
+    <a class="group" href={() => `https://last.fm/user/${() => lastFmName()}`} target="_blank">
       <div class="flex gap-4">
-        {imageElement}
+        <div class="relative size-16">
+          <img
+            class="absolute rounded-xl shadow-lg shadow-ctp-mantle transition-[scale] group-hover:scale-105"
+            src={() => lastFmImage()}
+            ref={(el: HTMLImageElement) => (imageElement = el)}
+          />
+        </div>
         <div class="flex flex-col justify-evenly">
           <a class="flex items-center text-lg leading-0 font-bold text-ctp-text no-underline group-hover:text-ctp-mauve group-hover:underline">
-            {username}
+            {() => lastFmName()}
             <Icon class="mb-auto ml-1 text-[10px]" icon="fa-external-link" />
           </a>
-          <span class="text-md leading-0 text-ctp-subtext0">Since {dateFormat.format(authenticatedAt)}</span>
+          <span class="text-md leading-0 text-ctp-subtext0">{() => dateFormat.format(Number(authTimeStamp()))}</span>
         </div>
       </div>
     </a>
