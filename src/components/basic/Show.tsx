@@ -1,44 +1,38 @@
 import { createEffect } from "../../util/state.js";
 
+type ShowChild = HTMLElement | (() => HTMLElement);
+
 type ShowProps = {
   when: () => any;
-  children: HTMLElement | (() => HTMLElement);
+  children: ShowChild | ShowChild[];
   fallback?: HTMLElement | (() => HTMLElement);
 };
 
-export const Show = (props: ShowProps): HTMLElement => {
-  const marker = document.createComment("show-marker");
-  let currentElement: HTMLElement | null = null;
+const Show = (props: ShowProps): HTMLElement => {
+  const wrapper = document.createElement("g-show");
+  wrapper.style.display = "contents";
+  let currentElements: HTMLElement[] = [];
 
-  const getChild = (child: HTMLElement | (() => HTMLElement)) =>
-    typeof child === "function" ? (child as () => HTMLElement)() : child;
+  const resolveChildren = (children: ShowChild | ShowChild[]): HTMLElement[] => {
+    const arr = Array.isArray(children) ? children : [children];
+    return arr.map((child) => (typeof child === "function" ? child() : child));
+  };
 
   createEffect(() => {
     const condition = props.when();
+    const nextElements = condition
+      ? props.children
+        ? resolveChildren(props.children)
+        : []
+      : props.fallback
+        ? resolveChildren(props.fallback)
+        : [];
 
-    let nextElement: HTMLElement | null = null;
-    if (condition) {
-      nextElement = props.children ? getChild(props.children) : null;
-    } else if (props.fallback) {
-      nextElement = getChild(props.fallback);
-    }
-
-    if (currentElement && currentElement.parentNode) {
-      if (nextElement) {
-        currentElement.replaceWith(nextElement);
-      } else {
-        currentElement.remove();
-      }
-    } else if (nextElement && marker.parentNode) {
-      marker.parentNode.insertBefore(nextElement, marker);
-    }
-
-    currentElement = nextElement;
+    for (const el of currentElements) el.remove();
+    wrapper.append(...nextElements);
+    currentElements = nextElements;
   });
 
-  const wrapper = document.createElement("g-show");
-  wrapper.style.display = "contents";
-  wrapper.appendChild(marker);
   return wrapper;
 };
 
