@@ -1,7 +1,7 @@
 export const numberFormat = new Intl.NumberFormat("nl-NL");
 
 export const dateFormat = new Intl.DateTimeFormat("en-GB", {
-  dateStyle: "long",
+  dateStyle: "medium",
   timeStyle: "short",
 });
 
