@@ -1,4 +1,4 @@
-import { searchTrack } from "../../api/lastfm.js";
+import { getLastFmApi } from "../../api/lastfm/lastfm.js";
 import { radioGroup } from "../../util/radio.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import { debounce } from "../../util/util.js";
@@ -18,6 +18,8 @@ type SearchInputProps = {
 };
 
 const SearchInput = (props: SearchInputProps): HTMLElement => {
+  const lastFmApi = getLastFmApi();
+
   const query = createSignal("");
   const error = createSignal<string | undefined>(undefined);
   const results = createSignal<SearchResult[]>([]);
@@ -33,8 +35,12 @@ const SearchInput = (props: SearchInputProps): HTMLElement => {
 
     busy = true;
     try {
-      const response = await searchTrack(currentQuery);
-      const tracks = response.results.trackmatches.track.slice(0, 5);
+      const response = await lastFmApi.track.search({ track: currentQuery });
+      if (response.error) {
+        console.error(`Error: ${response.error.error} - ${response.error.message}`);
+        return;
+      }
+      const tracks = response.data.results.trackmatches.track.slice(0, 5);
       const asResults: SearchResult[] = tracks.map((t: any) => ({
         name: t.name,
         artist: t.artist,
