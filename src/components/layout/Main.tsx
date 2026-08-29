@@ -4,6 +4,7 @@ import Show from "../basic/Show.js";
 import InfoSection from "../info/InfoSection.js";
 import LoginSection from "../login/LoginSection.js";
 import ManualSection from "../manual/ManualSection.js";
+import RecentSection from "../recent/RecentSection.js";
 import SearchSection from "../search/SearchSection.js";
 
 const Main = () => (
@@ -13,6 +14,7 @@ const Main = () => (
       <AccountSection />
       <SearchSection />
       <ManualSection />
+      <RecentSection />
     </Show>
   </main>
 );
