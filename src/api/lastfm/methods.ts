@@ -1,4 +1,11 @@
-import type { LastFmArtist, LastFmQueryResponse, LastFmRequest, LastFmTrack, LastFmUser } from "./generic.js";
+import type {
+  LastFmArtist,
+  LastFmQueryResponse,
+  LastFmRecentTrack,
+  LastFmRequest,
+  LastFmTrack,
+  LastFmUser,
+} from "./generic.js";
 
 // track.search
 export type LastFmTrackSearchParameters = {
@@ -33,3 +40,18 @@ export type LastFmUserGetInfoParameters = {
 };
 export type LastFmUserGetInfoResponse = { user: LastFmUser };
 export type LastFmUserGetInfoRequest = LastFmRequest<LastFmUserGetInfoParameters, LastFmUserGetInfoResponse>;
+
+// user.getRecentTracks
+export type LastFmUserGetRecentTracksParameters = {
+  user: string;
+  limit?: number;
+  page?: number;
+  from?: number;
+  to?: number;
+  extended?: 0 | 1;
+};
+export type LastFmUserGetRecentTracksResponse = { recenttracks: { track: LastFmRecentTrack[] } };
+export type LastFmUserGetRecentTracksRequest = LastFmRequest<
+  LastFmUserGetRecentTracksParameters,
+  LastFmUserGetRecentTracksResponse
+>;

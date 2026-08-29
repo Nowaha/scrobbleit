@@ -1,4 +1,9 @@
-import { LastFmArtistSearchRequest, LastFmTrackSearchRequest, LastFmUserGetInfoRequest } from "./methods.js";
+import {
+  LastFmArtistSearchRequest,
+  LastFmTrackSearchRequest,
+  LastFmUserGetInfoRequest,
+  LastFmUserGetRecentTracksRequest,
+} from "./methods.js";
 
 export type LastFmApi = {
   track: {
@@ -9,5 +14,6 @@ export type LastFmApi = {
   };
   user: {
     getInfo: LastFmUserGetInfoRequest;
+    getRecentTracks: LastFmUserGetRecentTracksRequest;
   };
 };

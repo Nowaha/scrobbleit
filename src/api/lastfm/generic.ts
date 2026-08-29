@@ -48,6 +48,14 @@ export type LastFmTrack = LastFmEntity & {
   artist: string;
 };
 
+export type LastFmRecentTrack = LastFmEntity & {
+  artist: { mbid: string; "#text": string };
+  date: {
+    uts: number;
+    "#text": string;
+  };
+};
+
 export type LastFmUser = {
   spotify_expiry_estimate?: {
     unixtime: number;

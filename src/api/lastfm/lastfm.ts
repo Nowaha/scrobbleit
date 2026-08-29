@@ -1,6 +1,11 @@
 import { LastFmApi } from "./api.js";
-import { LastFmError, LastFmParameters, LastFmResponseError, LastFmResponseSuccess } from "./generic.js";
-import { LastFmArtistSearchRequest, LastFmTrackSearchRequest, LastFmUserGetInfoRequest } from "./methods.js";
+import { LastFmParameters, LastFmResponseError, LastFmResponseSuccess } from "./generic.js";
+import {
+  LastFmArtistSearchRequest,
+  LastFmTrackSearchRequest,
+  LastFmUserGetInfoRequest,
+  LastFmUserGetRecentTracksRequest,
+} from "./methods.js";
 
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
 const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
@@ -39,6 +44,7 @@ const initLastFmApi = (): LastFmApi => ({
   },
   user: {
     getInfo: basicRequest<LastFmUserGetInfoRequest>("user.getInfo"),
+    getRecentTracks: basicRequest<LastFmUserGetRecentTracksRequest>("user.getRecentTracks"),
   },
 });
 
