@@ -1,3 +1,4 @@
+import { lastFmName } from "../../state/auth.js";
 import { createInputFocusGroup } from "../../util/focus.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import Button from "../basic/Button.js";
@@ -8,6 +9,8 @@ import SpinningCircle from "../SpinningCircle.js";
 import ScrobbleButton from "./ScrobbleButton.js";
 
 const ManualSection = (): HTMLElement => {
+  const manualForm = createSignal<HTMLFormElement | undefined>(undefined);
+
   const trackName = createSignal("");
   const trackNameError = createSignal<string | undefined>(undefined);
   const artistName = createSignal("");
@@ -37,9 +40,11 @@ const ManualSection = (): HTMLElement => {
     if (!artistName()) artistNameError.set("Artist name is required");
   };
 
-  queueMicrotask(() => {
-    const form = document.getElementById("manualForm");
-    createInputFocusGroup(form!);
+  createEffect(() => {
+    const form = manualForm();
+    const username = lastFmName();
+    if (form === undefined || username === undefined || username === null) return;
+    createInputFocusGroup(form);
   });
 
   return (
@@ -49,7 +54,7 @@ const ManualSection = (): HTMLElement => {
       title="Manual"
       description="Manually enter the details of the track you'd like to scrobble."
     >
-      <form id="manualForm" class="flex flex-col gap-3" onsubmit={handleSubmit}>
+      <form id="manualForm" class="flex flex-col gap-3" onsubmit={handleSubmit} ref={manualForm.set}>
         <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
         <ControlledInput id="artistName" label="Artist Name" value={artistName} error={artistNameError} required />
         <ControlledInput id="albumName" label="Album Name" value={albumName} error={albumNameError} />
