@@ -1,12 +1,17 @@
 import { fetchImageUrl } from "../../api/iTunes.js";
-import { createEffect, Signal } from "../../util/state.js";
+import { getLastFmApi } from "../../api/lastfm/lastfm.js";
+import AutocompleteInput from "../basic/input/autocomplete/Autocomplete.js";
 import Recommendation from "./Recommendation.js";
-import { SearchResult } from "./SearchInput.js";
+
+export type SearchResult = {
+  name: string;
+  artist: string;
+  listeners: number;
+};
 
 type SearchAutocompleteProps = {
   id: string;
-  visible: Signal<boolean>;
-  results: Signal<SearchResult[]>;
+  onResultSelected?: (result: SearchResult) => void;
   onItemsChanged?: (
     items: {
       data: SearchResult;
@@ -16,39 +21,35 @@ type SearchAutocompleteProps = {
 };
 
 const SearchAutocomplete = (props: SearchAutocompleteProps) => {
-  let container = (
-    <div id={props.id} role="listbox" class="absolute top-full z-10 flex flex-col gap-0.5 rounded-sm bg-ctp-surface0" />
+  const lastFmApi = getLastFmApi();
+
+  const search = async (query: string) => {
+    const response = await lastFmApi.track.search({ track: query });
+    if (response.error) {
+      console.error(`Error: ${response.error.error} - ${response.error.message}`);
+      return [];
+    }
+    const tracks = response.data.results.trackmatches.track.slice(0, 5);
+    const asResults: SearchResult[] = tracks.map((t: any) => ({
+      name: t.name,
+      artist: t.artist,
+      listeners: Number(t.listeners),
+    }));
+    return asResults;
+  };
+
+  const buildElement = (result: SearchResult) => (
+    <Recommendation
+      artist={result.artist}
+      track={result.name}
+      listeners={result.listeners}
+      imageUrlFetcher={() => fetchImageUrl(result.artist, result.name)}
+    />
   );
 
-  createEffect(() => {
-    if (props.visible()) {
-      container.classList.remove("hidden");
-    } else {
-      container.classList.add("hidden");
-    }
-  });
-
-  createEffect(() => {
-    const results = props.results();
-    container.replaceChildren();
-
-    const items = results.map((result) => {
-      const itemElement = (
-        <Recommendation
-          artist={result.artist}
-          track={result.name}
-          listeners={result.listeners}
-          imageUrlFetcher={() => fetchImageUrl(result.artist, result.name)}
-        />
-      ) as HTMLElement;
-      return { data: result, element: itemElement };
-    });
-
-    items.forEach(({ element }) => container.appendChild(element));
-    props.onItemsChanged?.(items);
-  });
-
-  return container;
+  return (
+    <AutocompleteInput id={props.id} search={search} buildElement={buildElement} trigger={{ placeholder: "Search" }} />
+  );
 };
 
 export default SearchAutocomplete;
