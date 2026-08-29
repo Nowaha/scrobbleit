@@ -1,6 +1,6 @@
 import { Signal } from "../util/state.js";
 import Field from "./basic/Field.js";
-import TextInput from "./basic/TextInput.js";
+import TextInput from "./basic/input/TextInput.js";
 
 type ControlledInputProps = {
   id: string;

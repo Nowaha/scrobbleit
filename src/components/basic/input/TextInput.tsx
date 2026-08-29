@@ -1,4 +1,4 @@
-import { Signal } from "../../util/state";
+import { Signal } from "../../../util/state";
 
 type TextInputProps = {
   id: string;

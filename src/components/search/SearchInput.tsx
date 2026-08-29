@@ -3,7 +3,7 @@ import { radioGroup } from "../../util/radio.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import { debounce } from "../../util/util.js";
 import Field from "../basic/Field.js";
-import TextInput from "../basic/TextInput.js";
+import TextInput from "../basic/input/TextInput.js";
 import SearchAutocomplete from "./SearchAutocomplete.js";
 
 export type SearchResult = {
