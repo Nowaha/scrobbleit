@@ -4,6 +4,7 @@ import TextInput from "../TextInput.js";
 export type AutocompleteTriggerProps<T> = {
   id: string;
   placeholder: string;
+  required?: boolean;
   results: Signal<T[]>;
   value: Signal<string>;
   error: Signal<string | undefined>;
@@ -16,10 +17,11 @@ const AutocompleteTrigger = <T,>(props: AutocompleteTriggerProps<T>) =>
       id={props.id}
       type="text"
       role="combobox"
-      placeholder="Search"
+      placeholder={props.placeholder}
       aria-expanded={() => (props.isFocused() && props.results().length > 0 ? "true" : "false")}
       aria-haspopup="listbox"
       aria-autocomplete="list"
+      required={props.required}
       value={props.value}
       error={props.error}
       on={{

@@ -7,9 +7,12 @@ import Show from "../basic/Show.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
 import ScrobbleButton from "./ScrobbleButton.js";
+import TrackNameAutocomplete from "./TrackNameAutocomplete.js";
 
 const ManualSection = (): HTMLElement => {
   const manualForm = createSignal<HTMLFormElement | undefined>(undefined);
+
+  let artistNameInput!: HTMLInputElement;
 
   const trackName = createSignal("");
   const trackNameError = createSignal<string | undefined>(undefined);
@@ -55,8 +58,25 @@ const ManualSection = (): HTMLElement => {
       description="Manually enter the details of the track you'd like to scrobble."
     >
       <form id="manualForm" class="flex flex-col gap-3" onsubmit={handleSubmit} ref={manualForm.set}>
-        <ControlledInput id="trackName" label="Track Name" value={trackName} error={trackNameError} required />
-        <ControlledInput id="artistName" label="Artist Name" value={artistName} error={artistNameError} required />
+        <TrackNameAutocomplete
+          id="trackName"
+          value={trackName}
+          onResultSelected={(result) => {
+            trackName.set(result.name);
+            artistName.set(result.artist);
+            albumName.set("");
+            albumArtist.set("");
+            artistNameInput.focus();
+          }}
+        />
+        <ControlledInput
+          id="artistName"
+          label="Artist Name"
+          value={artistName}
+          error={artistNameError}
+          required
+          ref={(el) => (artistNameInput = el)}
+        />
         <ControlledInput id="albumName" label="Album Name" value={albumName} error={albumNameError} />
         <ControlledInput
           id="albumArtist"

@@ -1,7 +1,8 @@
 import { fetchImageUrl } from "../../api/iTunes.js";
 import { getLastFmApi } from "../../api/lastfm/lastfm.js";
+import { Signal } from "../../util/state.js";
 import AutocompleteInput from "../basic/input/autocomplete/Autocomplete.js";
-import Recommendation from "./Recommendation.js";
+import Recommendation from "../basic/input/autocomplete/Recommendation.js";
 
 export type SearchResult = {
   name: string;
@@ -11,6 +12,7 @@ export type SearchResult = {
 
 type SearchAutocompleteProps = {
   id: string;
+  value: Signal<string>;
   onResultSelected?: (result: SearchResult) => void;
   onItemsChanged?: (
     items: {
@@ -48,7 +50,14 @@ const SearchAutocomplete = (props: SearchAutocompleteProps) => {
   );
 
   return (
-    <AutocompleteInput id={props.id} search={search} buildElement={buildElement} trigger={{ placeholder: "Search" }} />
+    <AutocompleteInput
+      id={props.id}
+      label="Search"
+      placeholder="Search"
+      value={props.value}
+      search={search}
+      buildElement={buildElement}
+    />
   );
 };
 

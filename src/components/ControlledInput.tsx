@@ -11,6 +11,7 @@ type ControlledInputProps = {
   required?: boolean;
   disabled?: boolean;
   placeholder?: string | Signal<string>;
+  ref?: (el: HTMLInputElement) => void;
 };
 
 const ControlledInput = (props: ControlledInputProps): HTMLElement => {
@@ -40,6 +41,7 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
         disabled={props.disabled}
         placeholder={props.placeholder ?? ""}
         onInput={handleInput}
+        ref={props.ref}
         on={{ keydown: onKeyDown }}
       />
     </Field>
