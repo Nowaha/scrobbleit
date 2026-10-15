@@ -37,6 +37,8 @@ const ManualSection = (): HTMLElement => {
     );
   });
 
+  const albumArtistPlaceholder = createSignal<string>("Album Artist");
+
   const handleSubmit = (e: Event) => {
     e.preventDefault();
     if (!trackName()) trackNameError.set("Track name is required");
@@ -48,6 +50,15 @@ const ManualSection = (): HTMLElement => {
     const username = lastFmName();
     if (form === undefined || username === undefined || username === null) return;
     createInputFocusGroup(form);
+  });
+
+  createEffect(() => {
+    const artist = artistName();
+    if (!artist || artist.trim().length === 0) {
+      albumArtistPlaceholder.set("Album Artist");
+      return;
+    }
+    albumArtistPlaceholder.set(artist);
   });
 
   return (
@@ -72,18 +83,25 @@ const ManualSection = (): HTMLElement => {
         <ControlledInput
           id="artistName"
           label="Artist Name"
+          placeholder="Artist Name"
           value={artistName}
           error={artistNameError}
           required
           ref={(el) => (artistNameInput = el)}
         />
-        <ControlledInput id="albumName" label="Album Name" value={albumName} error={albumNameError} />
+        <ControlledInput
+          id="albumName"
+          label="Album Name"
+          placeholder="Album Name"
+          value={albumName}
+          error={albumNameError}
+        />
         <ControlledInput
           id="albumArtist"
           label="Album Artist"
           value={albumArtist}
           error={albumArtistError}
-          placeholder={artistName}
+          placeholder={albumArtistPlaceholder}
         />
         <div class="flex w-full justify-end gap-4">
           <Show when={hasEntries}>
