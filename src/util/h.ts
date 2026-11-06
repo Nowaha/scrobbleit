@@ -26,10 +26,10 @@ export function h<K extends keyof HTMLElementTagNameMap>(
         for (const [className, condition] of Object.entries(val)) {
           if (typeof condition === "function") {
             createEffect(() => {
-              el.classList.toggle(className, Boolean((condition as () => any)()));
+              className.split(" ").forEach((it) => el.classList.toggle(it, Boolean((condition as () => any)())));
             });
           } else {
-            el.classList.toggle(className, Boolean(condition));
+            className.split(" ").forEach((it) => el.classList.toggle(it, Boolean(condition)));
           }
         }
       } else if (typeof val === "function" && !key.startsWith("on")) {
