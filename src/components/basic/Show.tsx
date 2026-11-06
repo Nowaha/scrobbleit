@@ -3,7 +3,7 @@ import { createEffect } from "../../util/state.js";
 type ShowChild = HTMLElement | (() => HTMLElement);
 
 type ShowProps = {
-  when: () => any;
+  when: boolean | undefined | (() => any);
   children: ShowChild | ShowChild[];
   fallback?: HTMLElement | (() => HTMLElement);
 };
@@ -19,7 +19,7 @@ const Show = (props: ShowProps): HTMLElement => {
   };
 
   createEffect(() => {
-    const condition = props.when();
+    const condition = typeof props.when === "function" ? props.when() : props.when;
     const nextElements = condition
       ? props.children
         ? resolveChildren(props.children)
