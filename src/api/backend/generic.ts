@@ -1,7 +1,11 @@
 type BackendParameters = Record<string, string | number | boolean>;
 type BackendError = {
   code: number;
-  error: string;
+  error: BackendErrorDetails;
+};
+type BackendErrorDetails = {
+  error_type: "upstream_error" | "invalid_auth" | "bad_request";
+  message: string;
 };
 
 export type BackendResponseSuccess<T> = { success: true; data: T; error: never };

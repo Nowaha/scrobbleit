@@ -15,8 +15,8 @@ export const getSession: BackendGetSessionRequest = async ({ token }) => {
     body: JSON.stringify({ token }),
   });
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    return { success: false, error: { code: res.status, error: text } } as BackendResponseError;
+    const errorDetails = await res.json().catch(() => {});
+    return { success: false, error: { code: res.status, error: errorDetails } } as BackendResponseError;
   }
   const json = await res.json();
   return { success: true, data: json } as BackendResponseSuccess<BackendGetSessionResponse>;
