@@ -39,10 +39,9 @@ const ManualSection = (): HTMLElement => {
 
   const albumArtistPlaceholder = createSignal<string>("Album Artist");
 
-  const handleSubmit = (e: Event) => {
-    e.preventDefault();
-    if (!trackName()) trackNameError.set("Track name is required");
-    if (!artistName()) artistNameError.set("Artist name is required");
+  const handleSubmit = () => {
+    if (!trackName() || trackName().trim().length === 0) trackNameError.set("Track name is required");
+    if (!artistName() || artistName().trim().length === 0) artistNameError.set("Artist name is required");
   };
 
   createEffect(() => {
@@ -68,10 +67,11 @@ const ManualSection = (): HTMLElement => {
       title="Manual"
       description="Manually enter the details of the track you'd like to scrobble."
     >
-      <form id="manualForm" class="flex flex-col gap-3" onsubmit={handleSubmit} ref={manualForm.set}>
+      <div id="manualForm" class="flex flex-col gap-3" ref={manualForm.set}>
         <TrackNameAutocomplete
           id="trackName"
           value={trackName}
+          error={trackNameError}
           onResultSelected={(result) => {
             trackName.set(result.name);
             artistName.set(result.artist);
@@ -126,10 +126,10 @@ const ManualSection = (): HTMLElement => {
           </Show>
           <div>
             <SpinningCircle />
-            <ScrobbleButton />
+            <ScrobbleButton onClick={handleSubmit} />
           </div>
         </div>
-      </form>
+      </div>
     </Section>
   );
 };

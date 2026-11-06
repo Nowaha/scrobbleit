@@ -13,6 +13,7 @@ export type SearchResult = {
 type TrackNameAutocompleteProps = {
   id: string;
   value: Signal<string>;
+  error?: Signal<string | undefined>;
   onResultSelected?: (result: SearchResult) => void;
   onItemsChanged?: (
     items: {
@@ -55,6 +56,7 @@ const TrackNameAutocomplete = (props: TrackNameAutocompleteProps) => {
       label="Track name"
       placeholder="Track name"
       value={props.value}
+      error={props.error}
       required
       search={search}
       buildElement={buildElement}

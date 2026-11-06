@@ -10,6 +10,7 @@ type AutocompleteInputProps<T> = {
   label: string;
   required?: boolean;
   placeholder: string;
+  error?: Signal<string | undefined>;
   value: Signal<string>;
   search: (query: string) => Promise<T[]>;
   buildElement: (result: T) => HTMLElement;
@@ -17,7 +18,7 @@ type AutocompleteInputProps<T> = {
 };
 
 const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>): HTMLElement => {
-  const error = createSignal<string | undefined>(undefined);
+  const error = props.error ?? createSignal<string | undefined>(undefined);
   const results = createSignal<T[]>([]);
   const isFocused = createSignal(false);
 
