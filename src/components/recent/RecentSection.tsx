@@ -1,10 +1,13 @@
 import { getLastFmApi } from "../../api/lastfm/lastfm.js";
+import { useToasts } from "../../service/toastService.js";
 import { lastFmName } from "../../state/auth.js";
+import { fillManualForm } from "../../state/manualForm.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import Section from "../basic/Section.js";
 import RecentTrack from "./RecentTrack.js";
 
 const RecentSection = () => {
+  const toasts = useToasts();
   const recentRef = createSignal<HTMLDivElement | undefined>(undefined);
   const lastFmApi = getLastFmApi();
 
@@ -17,7 +20,17 @@ const RecentSection = () => {
       recent.replaceChildren();
 
       res.data.recenttracks.track.forEach((track) => {
-        recent.appendChild(<RecentTrack track={track} />);
+        const onCopy = () =>
+          fillManualForm({
+            track: track.name,
+            artist: track.artist["#text"],
+            album: track.album?.["#text"],
+          });
+
+        const onScrobble = () => {
+          toasts.success(`Scrobbled ${track.artist["#text"]} - ${track.name}`);
+        };
+        recent.appendChild(<RecentTrack track={track} onCopy={onCopy} onScrobble={onScrobble} />);
       });
     });
   });
