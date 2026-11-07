@@ -65,6 +65,7 @@ export type LastFmRecentTrackScrobbled = {
 
 export type LastFmRecentTrack = LastFmEntity & {
   artist: { mbid: string; "#text": string };
+  album: { mbid: string; "#text": string };
 } & (LastFmRecentTrackCurrentlyPlaying | LastFmRecentTrackScrobbled);
 
 export type LastFmUser = {
