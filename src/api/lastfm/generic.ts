@@ -48,13 +48,24 @@ export type LastFmTrack = LastFmEntity & {
   artist: string;
 };
 
-export type LastFmRecentTrack = LastFmEntity & {
-  artist: { mbid: string; "#text": string };
+export type LastFmRecentTrackCurrentlyPlaying = {
+  "@attr": {
+    nowplaying: true;
+  };
+  date: never;
+};
+
+export type LastFmRecentTrackScrobbled = {
+  "@attr": never;
   date: {
     uts: number;
     "#text": string;
   };
 };
+
+export type LastFmRecentTrack = LastFmEntity & {
+  artist: { mbid: string; "#text": string };
+} & (LastFmRecentTrackCurrentlyPlaying | LastFmRecentTrackScrobbled);
 
 export type LastFmUser = {
   spotify_expiry_estimate?: {
