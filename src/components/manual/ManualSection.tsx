@@ -1,4 +1,14 @@
 import { lastFmName } from "../../state/auth.js";
+import {
+  trackName,
+  trackNameError,
+  artistName,
+  artistNameError,
+  albumName,
+  albumNameError,
+  albumArtist,
+  albumArtistError,
+} from "../../state/manualForm.js";
 import { createInputFocusGroup } from "../../util/focus.js";
 import { createEffect, createSignal } from "../../util/state.js";
 import Button from "../basic/Button.js";
@@ -13,15 +23,6 @@ const ManualSection = (): HTMLElement => {
   const manualForm = createSignal<HTMLFormElement | undefined>(undefined);
 
   let artistNameInput!: HTMLInputElement;
-
-  const trackName = createSignal("");
-  const trackNameError = createSignal<string | undefined>(undefined);
-  const artistName = createSignal("");
-  const artistNameError = createSignal<string | undefined>(undefined);
-  const albumName = createSignal("");
-  const albumNameError = createSignal<string | undefined>(undefined);
-  const albumArtist = createSignal("");
-  const albumArtistError = createSignal<string | undefined>(undefined);
 
   const hasEntries = createSignal(false);
   createEffect(() => {
