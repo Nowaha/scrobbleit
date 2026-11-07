@@ -5,8 +5,6 @@ const ToastLayer = (): HTMLElement => {
   let toastsContainer!: HTMLUListElement;
 
   const addToast = (toastInfo: ToastInfo) => {
-    console.log("add");
-    console.log(toastsContainer);
     let el!: HTMLElement;
     let leaving = false;
 
@@ -37,7 +35,7 @@ const ToastLayer = (): HTMLElement => {
       id="toast-region"
       role="region"
       aria-label="notifications"
-      class="absolute top-0 right-0 left-0 z-4 flex flex-col overflow-hidden"
+      class="fixed top-0 right-0 left-0 z-4 flex flex-col overflow-hidden"
       ref={(el: HTMLUListElement) => {
         toastsContainer = el;
         registerToastHandler(addToast);
