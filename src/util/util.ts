@@ -5,7 +5,7 @@ export const dateFormat = new Intl.DateTimeFormat("en-GB", {
   timeStyle: "short",
 });
 
-export const debounce = <Args extends any[], Return>(
+export const debounce = <Args extends unknown[], Return>(
   fn: (...args: Args) => Return,
   delay: number,
 ): ((...args: Args) => void) => {

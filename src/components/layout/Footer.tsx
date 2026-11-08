@@ -1,4 +1,4 @@
-import Link from "../basic/Link.js";
+import Link from "../basic/Link.tsx";
 
 const Divider = () => <span>-</span>;
 

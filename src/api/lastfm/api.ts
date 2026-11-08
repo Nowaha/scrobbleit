@@ -3,7 +3,7 @@ import {
   LastFmTrackSearchRequest,
   LastFmUserGetInfoRequest,
   LastFmUserGetRecentTracksRequest,
-} from "./methods.js";
+} from "./methods.tsx";
 
 export type LastFmApi = {
   track: {

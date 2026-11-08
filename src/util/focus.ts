@@ -6,12 +6,9 @@ export const focusNext = (el: HTMLElement) => {
   focusable[index + 1]?.focus();
 };
 
-export const createInputFocusGroup = (parent: HTMLElement) => {
-  const inputs = Array.from(parent.getElementsByTagName("input"));
-
-  parent.addEventListener("keydown", (e) => {
-    if (e.key !== "Enter") return;
-    const i = inputs.indexOf(e.target as HTMLInputElement);
-    if (i !== -1) inputs[(i + 1) % inputs.length].focus();
-  });
+export const focusNextInputOnEnter = (e: KeyboardEvent & { currentTarget: HTMLElement }) => {
+  if (e.key !== "Enter") return;
+  const inputs = Array.from(e.currentTarget.getElementsByTagName("input"));
+  const i = inputs.indexOf(e.target as HTMLInputElement);
+  if (i !== -1) inputs[(i + 1) % inputs.length].focus();
 };

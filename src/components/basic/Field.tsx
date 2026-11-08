@@ -1,42 +1,50 @@
-import { createEffect, Signal } from "../../util/state.js";
-import Show from "./Show.js";
+import { children, createEffect, Show, type ParentComponent } from "solid-js";
 
 type FieldProps = {
   label: string;
   class?: string;
   inputId: string;
-  error: Signal<string | undefined>;
+  error?: string;
   required?: boolean;
   disabled?: boolean;
-  children: (HTMLElement & { id: string }) | (HTMLElement & { id: string })[];
 };
 
-const Field = (props: FieldProps) => {
-  let errorSpan = undefined;
-
-  const firstChild = props.children instanceof HTMLElement ? props.children : props.children[0];
+const Field: ParentComponent<FieldProps> = (props) => {
+  const resolved = children(() => props.children);
+  const errorId = () => `${props.inputId}-error`;
 
   createEffect(() => {
-    if (props.error()) {
-      firstChild.setAttribute("aria-errormessage", `${props.inputId}-error`);
-      errorSpan = <span>{props.error}</span>;
+    const root = resolved.toArray().find((c): c is HTMLElement => c instanceof HTMLElement);
+    if (!root) return;
+
+    const target = root.matches("input, select, textarea, button")
+      ? root
+      : (root.querySelector("input, select, textarea") ?? root);
+
+    if (props.error) {
+      target.setAttribute("aria-errormessage", errorId());
+      target.setAttribute("aria-invalid", "true");
     } else {
-      firstChild.removeAttribute("aria-errormessage");
-      errorSpan = undefined;
+      target.removeAttribute("aria-errormessage");
+      target.removeAttribute("aria-invalid");
     }
   });
 
   return (
     <div class={`flex flex-col ${props.class ?? ""}`}>
-      <label htmlFor={props.inputId} class="mb-0.5 text-ctp-subtext1">
+      <label for={props.inputId} class="mb-0.5 text-ctp-subtext1">
         {props.label}
-        {props.required ? <span class="ml-1 text-ctp-red">*</span> : undefined}
+        <Show when={props.required}>
+          <span class="ml-1 text-ctp-red">*</span>
+        </Show>
       </label>
-      {props.children}
+      {resolved()}
       <Show when={props.error}>
-        <span id={`${props.inputId}-error`} class="text-ctp-red">
-          {() => props.error()}
-        </span>
+        {(error) => (
+          <span id={errorId()} role="alert" class="text-ctp-red">
+            {error()}
+          </span>
+        )}
       </Show>
     </div>
   );

@@ -1,4 +1,4 @@
-import Button from "../basic/Button.js";
+import Button from "../basic/Button.tsx";
 
 type ScrobbleButtonProps = {
   onClick?: () => void;

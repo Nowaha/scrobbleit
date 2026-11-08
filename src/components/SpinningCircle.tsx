@@ -1,3 +1,3 @@
-const SpinningCircle = () => <div class="cpi"></div>;
+const SpinningCircle = () => <div class="cpi" />;
 
 export default SpinningCircle;

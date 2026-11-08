@@ -1,29 +1,36 @@
 {
-  "name": "scrobble-it",
+  "name": "scrobbleit",
   "version": "1.0.0",
-  "license": "MIT",
+  "description": "",
+  "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsc --watch --noEmit\" \"npx live-server public\" \"yarn tailwindcss -i ./src/public/index.css -o ./public/index.css --watch\" \"yarn build:js --watch\"",
-    "typecheck": "tsc --noEmit",
-    "build:js": "esbuild src/index.ts --bundle --outfile=public/dist/index.js --format=esm --jsx=automatic --jsx-import-source=@loafsx --alias:@loafsx/jsx-runtime=./src/util/jsx-runtime.ts --alias:@loafsx/jsx-dev-runtime=./src/util/jsx-runtime.ts",
-    "build:css": "yarn tailwindcss -i ./src/public/index.css -o ./public/index.css",
-    "clean": "rm -rf public/dist public/index.css",
-    "build": "yarn clean && yarn typecheck && yarn build:js --minify --sourcemap && yarn build:css --minify",
-    "format": "prettier --write \"src/**/*.{ts,tsx,html,css}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,html,css}\"",
-    "format:fast": "prettierd restart && prettierd \"src/**/*.{ts,tsx,html,css}\""
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
+  "license": "MIT",
   "devDependencies": {
     "@catppuccin/tailwindcss": "^1.0.0",
-    "@fsouza/prettierd": "^0.29.0",
-    "concurrently": "^10.0.5",
-    "esbuild": "^0.28.2",
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.1.13",
+    "eslint": "^10.15.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-solid": "^0.20.1",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "typescript": "^7.0.2"
+    "solid-devtools": "^0.34.3",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.74.0",
+    "vite": "^7.1.4",
+    "vite-plugin-solid": "^2.11.8"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.3.3",
-    "tailwindcss": "^4.3.3"
+    "solid-js": "^1.9.9"
   }
 }

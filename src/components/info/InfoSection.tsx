@@ -1,5 +1,5 @@
-import Link from "../basic/Link.js";
-import Section from "../basic/Section.js";
+import Link from "../basic/Link.tsx";
+import Section from "../basic/Section.tsx";
 
 const InfoSection = () => (
   <Section

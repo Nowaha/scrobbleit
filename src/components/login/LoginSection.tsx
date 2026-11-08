@@ -1,7 +1,7 @@
-import Link from "../basic/Link.js";
-import Section from "../basic/Section.js";
-import Spacer from "../basic/Spacer.js";
-import LastFmButton from "./LastFmButton.js";
+import Link from "../basic/Link.tsx";
+import Section from "../basic/Section.tsx";
+import Spacer from "../basic/Spacer.tsx";
+import LastFmButton from "./LastFmButton.tsx";
 
 const LoginSection = () => (
   <Section

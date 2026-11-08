@@ -1,12 +1,12 @@
-import { BackendApi } from "./api.js";
+import { BackendApi } from "./api.tsx";
 import {
   BackendGetSessionRequest,
   BackendGetSessionResponse,
   BackendResponseError,
   BackendResponseSuccess,
-} from "./generic.js";
+} from "./generic.ts";
 
-const BACKEND_BASE_URL = "http://localhost:3000";
+const BACKEND_BASE_URL = "http://localhost:3001";
 
 export const getSession: BackendGetSessionRequest = async ({ token }) => {
   const res = await fetch(BACKEND_BASE_URL + "/auth", {
