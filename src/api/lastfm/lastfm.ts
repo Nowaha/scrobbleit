@@ -9,7 +9,7 @@ import {
 
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
 const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
-const LAST_FM_AUTH_CALLBACK = "http://localhost:8080";
+const LAST_FM_AUTH_CALLBACK = "http://localhost:3000";
 const LAST_FM_AUTH_URL = "http://www.last.fm/api/auth/?api_key=" + LAST_FM_API_KEY + "&cb=" + LAST_FM_AUTH_CALLBACK;
 
 export const getLastFmAuthUrl = () => LAST_FM_AUTH_URL;

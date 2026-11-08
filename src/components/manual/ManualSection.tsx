@@ -1,65 +1,29 @@
-import { lastFmName } from "../../state/auth.js";
+import { Show } from "solid-js";
 import {
-  trackName,
-  trackNameError,
-  artistName,
-  artistNameError,
-  albumName,
-  albumNameError,
-  albumArtist,
-  albumArtistError,
+  clearManualForm,
+  hasManualEntries,
+  manualForm,
+  setManualError,
+  setManualField,
+  setManualForm,
 } from "../../state/manualForm.js";
-import { createInputFocusGroup } from "../../util/focus.js";
-import { createEffect, createSignal } from "../../util/state.js";
+import { focusNextInputOnEnter } from "../../util/focus.js";
 import Button from "../basic/Button.js";
 import Section from "../basic/Section.js";
-import Show from "../basic/Show.js";
 import ControlledInput from "../ControlledInput.js";
 import SpinningCircle from "../SpinningCircle.js";
 import ScrobbleButton from "./ScrobbleButton.js";
 import TrackNameAutocomplete from "./TrackNameAutocomplete.js";
 
-const ManualSection = (): HTMLElement => {
-  const manualForm = createSignal<HTMLFormElement | undefined>(undefined);
-
+const ManualSection = () => {
   let artistNameInput!: HTMLInputElement;
 
-  const hasEntries = createSignal(false);
-  createEffect(() => {
-    hasEntries.set(
-      trackName() !== "" ||
-        artistName() !== "" ||
-        albumName() !== "" ||
-        albumArtist() !== "" ||
-        trackNameError() !== undefined ||
-        artistNameError() !== undefined ||
-        albumNameError() !== undefined ||
-        albumArtistError() !== undefined,
-    );
-  });
-
-  const albumArtistPlaceholder = createSignal<string>("Album Artist");
+  const albumArtistPlaceholder = () => manualForm.values.artist.trim() || "Album Artist";
 
   const handleSubmit = () => {
-    if (!trackName() || trackName().trim().length === 0) trackNameError.set("Track name is required");
-    if (!artistName() || artistName().trim().length === 0) artistNameError.set("Artist name is required");
+    if (!manualForm.values.track.trim()) setManualError("track", "Track name is required");
+    if (!manualForm.values.artist.trim()) setManualError("artist", "Artist name is required");
   };
-
-  createEffect(() => {
-    const form = manualForm();
-    const username = lastFmName();
-    if (form === undefined || username === undefined || username === null) return;
-    createInputFocusGroup(form);
-  });
-
-  createEffect(() => {
-    const artist = artistName();
-    if (!artist || artist.trim().length === 0) {
-      albumArtistPlaceholder.set("Album Artist");
-      return;
-    }
-    albumArtistPlaceholder.set(artist);
-  });
 
   return (
     <Section
@@ -68,16 +32,15 @@ const ManualSection = (): HTMLElement => {
       title="Manual"
       description="Manually enter the details of the track you'd like to scrobble."
     >
-      <div id="manualForm" class="flex flex-col gap-3" ref={manualForm.set}>
+      <div id="manualForm" class="flex flex-col gap-3" onKeyDown={focusNextInputOnEnter}>
         <TrackNameAutocomplete
           id="trackName"
-          value={trackName}
-          error={trackNameError}
+          value={manualForm.values.track}
+          error={manualForm.errors.track}
+          onInput={(v) => setManualField("track", v)}
           onResultSelected={(result) => {
-            trackName.set(result.name);
-            artistName.set(result.artist);
-            albumName.set("");
-            albumArtist.set("");
+            setManualForm("values", { track: result.name, artist: result.artist, album: "", albumArtist: "" });
+            setManualForm("errors", { track: undefined, artist: undefined });
             artistNameInput.focus();
           }}
         />
@@ -85,8 +48,9 @@ const ManualSection = (): HTMLElement => {
           id="artistName"
           label="Artist Name"
           placeholder="Artist Name"
-          value={artistName}
-          error={artistNameError}
+          value={manualForm.values.artist}
+          error={manualForm.errors.artist}
+          onInput={(v) => setManualField("artist", v)}
           required
           ref={(el) => (artistNameInput = el)}
         />
@@ -94,34 +58,21 @@ const ManualSection = (): HTMLElement => {
           id="albumName"
           label="Album Name"
           placeholder="Album Name"
-          value={albumName}
-          error={albumNameError}
+          value={manualForm.values.album}
+          error={manualForm.errors.album}
+          onInput={(v) => setManualField("album", v)}
         />
         <ControlledInput
           id="albumArtist"
           label="Album Artist"
-          value={albumArtist}
-          error={albumArtistError}
-          placeholder={albumArtistPlaceholder}
+          value={manualForm.values.albumArtist}
+          error={manualForm.errors.albumArtist}
+          onInput={(v) => setManualField("albumArtist", v)}
+          placeholder={albumArtistPlaceholder()}
         />
         <div class="flex w-full justify-end gap-4">
-          <Show when={hasEntries}>
-            <Button
-              variant="secondary"
-              type="reset"
-              on={{
-                click: () => {
-                  trackName.set("");
-                  trackNameError.set(undefined);
-                  artistName.set("");
-                  artistNameError.set(undefined);
-                  albumName.set("");
-                  albumNameError.set(undefined);
-                  albumArtist.set("");
-                  albumArtistError.set(undefined);
-                },
-              }}
-            >
+          <Show when={hasManualEntries()}>
+            <Button variant="secondary" type="reset" onClick={clearManualForm}>
               Clear
             </Button>
           </Show>

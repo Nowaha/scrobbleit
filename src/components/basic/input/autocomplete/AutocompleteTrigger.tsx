@@ -1,34 +1,40 @@
-import { Signal } from "../../../../util/state.js";
+import type { VoidComponent } from "solid-js";
 import TextInput from "../TextInput.js";
 
-export type AutocompleteTriggerProps<T> = {
+export type AutocompleteTriggerProps = {
   id: string;
+  listboxId: string;
   placeholder: string;
   required?: boolean;
-  results: Signal<T[]>;
-  value: Signal<string>;
-  error: Signal<string | undefined>;
-  isFocused: Signal<boolean>;
+  value: string;
+  error?: string;
+  expanded: boolean;
+  activeDescendant?: string;
+  onInput: (value: string) => void;
+  onFocusChange: (focused: boolean) => void;
+  onKeyDown: (e: KeyboardEvent) => void;
 };
 
-const AutocompleteTrigger = <T,>(props: AutocompleteTriggerProps<T>) =>
-  (
-    <TextInput
-      id={props.id}
-      type="text"
-      role="combobox"
-      placeholder={props.placeholder}
-      aria-expanded={() => (props.isFocused() && props.results().length > 0 ? "true" : "false")}
-      aria-haspopup="listbox"
-      aria-autocomplete="list"
-      required={props.required}
-      value={props.value}
-      error={props.error}
-      on={{
-        focusin: () => props.isFocused.set(true),
-        focusout: () => props.isFocused.set(false),
-      }}
-    />
-  ) as HTMLInputElement;
+const AutocompleteTrigger: VoidComponent<AutocompleteTriggerProps> = (props) => (
+  <TextInput
+    id={props.id}
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    placeholder={props.placeholder}
+    aria-expanded={props.expanded}
+    aria-haspopup="listbox"
+    aria-autocomplete="list"
+    aria-controls={props.listboxId}
+    aria-activedescendant={props.activeDescendant}
+    required={props.required}
+    value={props.value}
+    error={props.error}
+    onInput={(e) => props.onInput(e.currentTarget.value)}
+    onFocusIn={() => props.onFocusChange(true)}
+    onFocusOut={() => props.onFocusChange(false)}
+    onKeyDown={props.onKeyDown}
+  />
+);
 
 export default AutocompleteTrigger;

@@ -1,28 +1,36 @@
-import { createSignal } from "../util/state.js";
+import { createStore } from "solid-js/store";
 
-export const trackName = createSignal("");
-export const trackNameError = createSignal<string | undefined>(undefined);
-export const artistName = createSignal("");
-export const artistNameError = createSignal<string | undefined>(undefined);
-export const albumName = createSignal("");
-export const albumNameError = createSignal<string | undefined>(undefined);
-export const albumArtist = createSignal("");
-export const albumArtistError = createSignal<string | undefined>(undefined);
+export type ManualFormField = "track" | "artist" | "album" | "albumArtist";
 
-export const fillManualForm = (data: { track: string; artist: string; album?: string }) => {
-  trackName.set(data.track);
-  artistName.set(data.artist);
-  albumName.set(data.album ?? "");
-  albumArtist.set("");
-
-  clearErrors();
-
-  document.getElementById("manualSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+type ManualFormState = {
+  values: Record<ManualFormField, string>;
+  errors: Record<ManualFormField, string | undefined>;
 };
 
-export const clearErrors = () => {
-  trackNameError.set(undefined);
-  artistNameError.set(undefined);
-  albumNameError.set(undefined);
-  albumArtistError.set(undefined);
+const emptyForm = (): ManualFormState => ({
+  values: { track: "", artist: "", album: "", albumArtist: "" },
+  errors: { track: undefined, artist: undefined, album: undefined, albumArtist: undefined },
+});
+
+export const [manualForm, setManualForm] = createStore<ManualFormState>(emptyForm());
+
+/** Sets a field's value and clears its error. */
+export const setManualField = (field: ManualFormField, value: string) => {
+  setManualForm("values", field, value);
+  setManualForm("errors", field, undefined);
 };
+
+export const setManualError = (field: ManualFormField, error: string | undefined) =>
+  setManualForm("errors", field, error);
+
+export const fillManualForm = (data: { track: string; artist: string; album?: string }) =>
+  setManualForm({
+    values: { track: data.track, artist: data.artist, album: data.album ?? "", albumArtist: "" },
+    errors: emptyForm().errors,
+  });
+
+export const clearManualForm = () => setManualForm(emptyForm());
+
+export const hasManualEntries = () =>
+  Object.values(manualForm.values).some((v) => v !== "") ||
+  Object.values(manualForm.errors).some((e) => e !== undefined);

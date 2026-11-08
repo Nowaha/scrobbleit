@@ -1,6 +1,6 @@
+import type { VoidComponent } from "solid-js";
 import { fetchImageUrl } from "../../api/iTunes.js";
 import { getLastFmApi } from "../../api/lastfm/lastfm.js";
-import { Signal } from "../../util/state.js";
 import AutocompleteInput from "../basic/input/autocomplete/Autocomplete.js";
 import Recommendation from "../basic/input/autocomplete/Recommendation.js";
 
@@ -12,43 +12,27 @@ export type SearchResult = {
 
 type TrackNameAutocompleteProps = {
   id: string;
-  value: Signal<string>;
-  error?: Signal<string | undefined>;
+  value: string;
+  error?: string;
+  onInput: (value: string) => void;
   onResultSelected?: (result: SearchResult) => void;
-  onItemsChanged?: (
-    items: {
-      data: SearchResult;
-      element: HTMLElement;
-    }[],
-  ) => void;
 };
 
-const TrackNameAutocomplete = (props: TrackNameAutocompleteProps) => {
+const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props) => {
   const lastFmApi = getLastFmApi();
 
-  const search = async (query: string) => {
+  const search = async (query: string): Promise<SearchResult[]> => {
     const response = await lastFmApi.track.search({ track: query });
-    if (response.error) {
+    if (!response.success) {
       console.error(`Error: ${response.error.error} - ${response.error.message}`);
       return [];
     }
-    const tracks = response.data.results.trackmatches.track.slice(0, 5);
-    const asResults: SearchResult[] = tracks.map((t: any) => ({
+    return response.data.results.trackmatches.track.slice(0, 5).map((t) => ({
       name: t.name,
       artist: t.artist,
       listeners: Number(t.listeners),
     }));
-    return asResults;
   };
-
-  const buildElement = (result: SearchResult) => (
-    <Recommendation
-      artist={result.artist}
-      track={result.name}
-      listeners={result.listeners}
-      imageUrlFetcher={() => fetchImageUrl(result.artist, result.name)}
-    />
-  );
 
   return (
     <AutocompleteInput
@@ -57,9 +41,17 @@ const TrackNameAutocomplete = (props: TrackNameAutocompleteProps) => {
       placeholder="Track name"
       value={props.value}
       error={props.error}
+      onInput={props.onInput}
       required
       search={search}
-      buildElement={buildElement}
+      renderItem={(result) => (
+        <Recommendation
+          artist={result.artist}
+          track={result.name}
+          listeners={result.listeners}
+          imageUrlFetcher={() => fetchImageUrl(result.artist, result.name)}
+        />
+      )}
       onResultSelected={props.onResultSelected}
     />
   );

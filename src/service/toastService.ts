@@ -1,32 +1,46 @@
-import { ToastInfo } from "../components/toast/Toast";
+import { createStore } from "solid-js/store";
 
-type ToastHandler = (toast: ToastInfo) => void;
+export const toastTimeouts = {
+  short: 2000,
+  medium: 5000,
+  long: 10000,
+} as const;
 
-let handler: ToastHandler | null = null;
-const pending: ToastInfo[] = [];
+export type ToastTimeout = keyof typeof toastTimeouts;
+export type ToastVariant = "positive" | "negative" | "warning" | "info";
+export type ToastInfo = {
+  variant: ToastVariant;
+  text: string;
+  dismissable: boolean;
+  timeout: ToastTimeout;
+};
+export type ToastEntry = ToastInfo & { id: number; leaving: boolean };
+export type ToastOptions = Partial<Pick<ToastInfo, "dismissable" | "timeout">>;
 
-export const registerToastHandler = (fn: ToastHandler) => {
-  handler = fn;
-  pending.splice(0).forEach(fn);
+const [toastList, setToastList] = createStore<ToastEntry[]>([]);
+export { toastList };
+
+let nextId = 0;
+
+const push = (variant: ToastVariant, text: string, options: ToastOptions = {}) =>
+  setToastList(toastList.length, {
+    id: nextId++,
+    variant,
+    text,
+    dismissable: options.dismissable ?? true,
+    timeout: options.timeout ?? "medium",
+    leaving: false,
+  });
+
+export const dismissToast = (id: number) => setToastList((t) => t.id === id, "leaving", true);
+
+export const removeToast = (id: number) => setToastList((list) => list.filter((t) => t.id !== id));
+
+export const toasts = {
+  success: (text: string, options?: ToastOptions) => push("positive", text, options),
+  error: (text: string, options?: ToastOptions) => push("negative", text, options),
+  warning: (text: string, options?: ToastOptions) => push("warning", text, options),
+  info: (text: string, options?: ToastOptions) => push("info", text, options),
 };
 
-export const unregisterToastHandler = (fn: ToastHandler) => {
-  if (handler === fn) handler = null;
-};
-
-const show = (toast: ToastInfo) => {
-  if (handler) handler(toast);
-  else pending.push(toast);
-};
-
-export const useToasts = () => ({
-  show,
-  info: (text: string, opts: Partial<ToastInfo> = {}) =>
-    show({ variant: "info", text, dismissable: true, timeout: "medium", ...opts } as ToastInfo),
-  success: (text: string, opts: Partial<ToastInfo> = {}) =>
-    show({ variant: "positive", text, dismissable: true, timeout: "medium", ...opts } as ToastInfo),
-  error: (text: string, opts: Partial<ToastInfo> = {}) =>
-    show({ variant: "negative", text, dismissable: true, timeout: "medium", ...opts } as ToastInfo),
-  warning: (text: string, opts: Partial<ToastInfo> = {}) =>
-    show({ variant: "warning", text, dismissable: true, timeout: "medium", ...opts } as ToastInfo),
-});
+export const useToasts = () => toasts;

@@ -1,42 +1,49 @@
+import { createResource, For } from "solid-js";
+import type { LastFmRecentTrack } from "../../api/lastfm/generic.js";
 import { getLastFmApi } from "../../api/lastfm/lastfm.js";
 import { useToasts } from "../../service/toastService.js";
 import { lastFmName } from "../../state/auth.js";
 import { fillManualForm } from "../../state/manualForm.js";
-import { createEffect, createSignal } from "../../util/state.js";
 import Section from "../basic/Section.js";
 import RecentTrack from "./RecentTrack.js";
 
 const RecentSection = () => {
   const toasts = useToasts();
-  const recentRef = createSignal<HTMLDivElement | undefined>(undefined);
   const lastFmApi = getLastFmApi();
 
-  createEffect(() => {
-    const recent = recentRef();
-    const username = lastFmName();
-    if (recent === undefined || username === undefined || username === null) return;
+  const [recentTracks] = createResource(
+    () => lastFmName() ?? false,
+    async (user) => {
+      const res = await lastFmApi.user.getRecentTracks({ user, limit: 10 });
+      if (!res.success) {
+        toasts.error(`Couldn't load recent tracks: ${res.error.message}`);
+        return [];
+      }
+      return res.data.recenttracks.track;
+    },
+    { initialValue: [] },
+  );
 
-    lastFmApi.user.getRecentTracks({ user: username, limit: 10 }).then((res) => {
-      recent.replaceChildren();
-
-      res.data.recenttracks.track.forEach((track) => {
-        const onCopy = () =>
-          fillManualForm({
-            track: track.name,
-            artist: track.artist["#text"],
-            album: track.album?.["#text"],
-          });
-
-        const onScrobble = () => {
-          toasts.success(`Scrobbled ${track.artist["#text"]} - ${track.name}`);
-        };
-        recent.appendChild(<RecentTrack track={track} onCopy={onCopy} onScrobble={onScrobble} />);
-      });
+  const onCopy = (track: LastFmRecentTrack) => {
+    fillManualForm({
+      track: track.name,
+      artist: track.artist["#text"],
+      album: track.album?.["#text"],
     });
-  });
+    toasts.info(`Copied "${track.artist["#text"]} - ${track.name}" to form`, { timeout: "short" });
+  };
+
+  const onScrobble = (track: LastFmRecentTrack) => {
+    toasts.success(`Scrobbled ${track.artist["#text"]} - ${track.name}`);
+  };
+
   return (
     <Section id="recent" icon="fa-record-vinyl" title="Recent" description="Your most recent scrobbles.">
-      <div class="flex flex-col gap-1" ref={recentRef.set}></div>
+      <div class="flex flex-col gap-1">
+        <For each={recentTracks.latest}>
+          {(track) => <RecentTrack track={track} onCopy={() => onCopy(track)} onScrobble={() => onScrobble(track)} />}
+        </For>
+      </div>
     </Section>
   );
 };

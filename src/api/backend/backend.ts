@@ -6,7 +6,7 @@ import {
   BackendResponseSuccess,
 } from "./generic.js";
 
-const BACKEND_BASE_URL = "http://localhost:3000";
+const BACKEND_BASE_URL = "http://localhost:3001";
 
 export const getSession: BackendGetSessionRequest = async ({ token }) => {
   const res = await fetch(BACKEND_BASE_URL + "/auth", {

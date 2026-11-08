@@ -1,23 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
+    // General
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "target": "ESNext",
+
+    // Modules
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+
+    // Type Checking & Safety
     "strict": true,
-    "sourceMap": true,
-    "rootDir": "src",
-    "outDir": "public/dist",
-    "jsx": "react-jsx",
-    "jsxImportSource": "@loafsx",
-    "paths": {
-      "@loafsx/jsx-runtime": [
-        "./src/util/jsx-runtime.ts"
-      ],
-      "@loafsx/jsx-dev-runtime": [
-        "./src/util/jsx-runtime.ts"
-      ]
-    }
-  },
-  "include": [
-    "src/**/*"
-  ]
+    "types": ["vite/client"]
+  }
 }

@@ -1,41 +1,38 @@
-import { createEffect, Signal } from "../../../../util/state.js";
-
-type ResultItem<T> = {
-  data: T;
-  element: HTMLElement;
-};
+import { For, type JSX } from "solid-js";
 
 type AutocompleteSuggestionsProps<T> = {
   id: string;
-  visible: Signal<boolean>;
-  results: Signal<T[]>;
-  buildElement: (result: T) => HTMLElement;
-  onItemsChanged?: (items: ResultItem<T>[]) => void;
+  visible: boolean;
+  results: T[];
+  activeIndex: number;
+  optionId: (index: number) => string;
+  renderItem: (result: T) => JSX.Element;
+  onSelect: (index: number) => void;
 };
 
-const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>) => {
-  let container = (
-    <div id={props.id} role="listbox" class="absolute top-full z-10 flex flex-col gap-0.5 rounded-sm bg-ctp-surface0" />
-  );
-
-  createEffect(() => {
-    if (props.visible()) {
-      container.classList.remove("hidden");
-    } else {
-      container.classList.add("hidden");
-    }
-  });
-
-  createEffect(() => {
-    const results = props.results();
-    container.replaceChildren();
-
-    const items: ResultItem<T>[] = results.map((result: T) => ({ data: result, element: props.buildElement(result) }));
-    items.forEach((item) => container.appendChild(item.element));
-    props.onItemsChanged?.(items);
-  });
-
-  return container;
-};
+const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>) => (
+  <div
+    id={props.id}
+    role="listbox"
+    class="absolute top-full z-10 flex flex-col gap-0.5 rounded-sm bg-ctp-surface0"
+    classList={{ hidden: !props.visible }}
+  >
+    <For each={props.results}>
+      {(result, i) => (
+        <div
+          id={props.optionId(i())}
+          role="option"
+          aria-selected={i() === props.activeIndex}
+          class="cursor-pointer first:rounded-t-lg last:rounded-b-lg hover:bg-ctp-surface1 aria-selected:bg-ctp-surface1 aria-selected:outline-1 aria-selected:outline-ctp-mauve"
+          // Keep focus on the input while clicking an option.
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => props.onSelect(i())}
+        >
+          {props.renderItem(result)}
+        </div>
+      )}
+    </For>
+  </div>
+);
 
 export default AutocompleteSuggestions;

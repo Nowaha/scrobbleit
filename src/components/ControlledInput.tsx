@@ -1,26 +1,20 @@
-import { Signal } from "../util/state.js";
+import type { VoidComponent } from "solid-js";
 import Field from "./basic/Field.js";
 import TextInput from "./basic/input/TextInput.js";
 
 type ControlledInputProps = {
   id: string;
   label: string;
-  type?: string;
-  value: Signal<string>;
-  error: Signal<string | undefined>;
+  value: string;
+  error?: string;
   required?: boolean;
   disabled?: boolean;
-  placeholder?: string | Signal<string>;
+  placeholder?: string;
+  onInput: (value: string) => void;
   ref?: (el: HTMLInputElement) => void;
 };
 
-const ControlledInput = (props: ControlledInputProps): HTMLElement => {
-  const handleInput = (e: Event) => {
-    const val = (e.target as HTMLInputElement).value;
-    props.value.set(val);
-    if (props.error()) props.error.set(undefined);
-  };
-
+const ControlledInput: VoidComponent<ControlledInputProps> = (props) => {
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== "Enter") return;
     e.preventDefault();
@@ -38,11 +32,12 @@ const ControlledInput = (props: ControlledInputProps): HTMLElement => {
         id={props.id}
         value={props.value}
         error={props.error}
+        required={props.required}
         disabled={props.disabled}
         placeholder={props.placeholder ?? ""}
-        onInput={handleInput}
+        onInput={(e) => props.onInput(e.currentTarget.value)}
+        onKeyDown={onKeyDown}
         ref={props.ref}
-        on={{ keydown: onKeyDown }}
       />
     </Field>
   );

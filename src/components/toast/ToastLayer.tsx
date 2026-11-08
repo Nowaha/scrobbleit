@@ -1,47 +1,30 @@
-import { registerToastHandler } from "../../service/toastService";
-import Toast, { ToastInfo } from "./Toast";
+import { For } from "solid-js";
+import { dismissToast, removeToast, toastList } from "../../service/toastService.js";
+import Toast from "./Toast.js";
 
-const ToastLayer = (): HTMLElement => {
-  let toastsContainer!: HTMLUListElement;
-
-  const addToast = (toastInfo: ToastInfo) => {
-    let el!: HTMLElement;
-    let leaving = false;
-
-    const dismiss = () => {
-      if (leaving) return;
-      leaving = true;
-
-      el.firstElementChild?.classList.remove("animate-slide-in");
-      el.firstElementChild?.classList.add("animate-slide-out");
-      el.addEventListener("animationend", () => el.remove(), { once: true });
-    };
-
-    el = toastsContainer.appendChild(
-      <li>
-        <Toast
-          variant={toastInfo.variant}
-          text={toastInfo.text}
-          timeout={toastInfo.timeout}
-          dismissable={toastInfo.dismissable}
-          dismiss={dismiss}
-        />
-      </li>,
-    );
-  };
-
-  return (
-    <ul
-      id="toast-region"
-      role="region"
-      aria-label="notifications"
-      class="fixed top-0 right-0 left-0 z-4 flex flex-col overflow-hidden"
-      ref={(el: HTMLUListElement) => {
-        toastsContainer = el;
-        registerToastHandler(addToast);
-      }}
-    ></ul>
-  );
-};
+const ToastLayer = () => (
+  <ul
+    id="toast-region"
+    role="region"
+    aria-label="notifications"
+    class="fixed top-0 right-0 left-0 z-4 flex flex-col overflow-hidden"
+  >
+    <For each={toastList}>
+      {(toast) => (
+        <li>
+          <Toast
+            variant={toast.variant}
+            text={toast.text}
+            timeout={toast.timeout}
+            dismissable={toast.dismissable}
+            leaving={toast.leaving}
+            dismiss={() => dismissToast(toast.id)}
+            onRemoved={() => removeToast(toast.id)}
+          />
+        </li>
+      )}
+    </For>
+  </ul>
+);
 
 export default ToastLayer;

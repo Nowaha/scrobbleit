@@ -1,17 +1,21 @@
-import { createSignal } from "./state.js";
+import { createSignal, type Accessor, type Setter } from "solid-js";
 
-export const createPersistedSignal = (key: string, initial: string | null = null) => {
+export const createPersistedSignal = (
+  key: string,
+  initial: string | null = null
+): [Accessor<string | null>, Setter<string | null>] => {
   const stored = localStorage.getItem(key);
-  const sig = createSignal<string | null>(stored ?? initial);
-  const originalSet = sig.set;
-  sig.set = (value) => {
-    const next = typeof value === "function" ? (value as Function)(sig()) : value;
+  const [value, setValue] = createSignal<string | null>(stored ?? initial);
+
+  const set = ((arg: any) => {
+    const next = setValue(arg); // Solid resolves functional updates for you
     if (next === null || next === undefined) {
       localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, next);
     }
-    originalSet(next);
-  };
-  return sig;
+    return next;
+  }) as Setter<string | null>;
+
+  return [value, set];
 };

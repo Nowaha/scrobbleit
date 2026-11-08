@@ -1,44 +1,37 @@
-import Show from "../basic/Show";
+import { onCleanup, Show } from "solid-js";
+import { toastTimeouts, type ToastTimeout, type ToastVariant } from "../../service/toastService.js";
 
-const timeouts = {
-  short: 2000,
-  medium: 5000,
-  long: 10000,
-} as const;
-export type ToastTimeout = keyof typeof timeouts;
-export type ToastVariant = "positive" | "negative" | "warning" | "info";
-export type ToastInfo = {
-  variant: ToastVariant;
-  text: string;
-  dismissable: boolean;
-  timeout: ToastTimeout;
-};
+export type { ToastInfo, ToastTimeout, ToastVariant } from "../../service/toastService.js";
 
 type ToastProps = {
   variant: ToastVariant;
   text: string;
   dismissable?: boolean;
   timeout?: ToastTimeout;
+  leaving: boolean;
   dismiss: () => void;
+  /** Called once the exit animation has finished. */
+  onRemoved: () => void;
 };
 
-const Toast = (props: ToastProps): HTMLElement => {
-  setTimeout(
-    () => {
-      props.dismiss();
-    },
-    timeouts[props.timeout ?? "medium"],
-  );
+const Toast = (props: ToastProps) => {
+  const timer = setTimeout(() => props.dismiss(), toastTimeouts[props.timeout ?? "medium"]);
+  onCleanup(() => clearTimeout(timer));
 
   return (
     <div
-      role={props.variant === "positive" || "info" ? "status" : "alert"}
-      class="relative flex w-full animate-slide-in justify-between p-4 text-ctp-base"
+      role={props.variant === "positive" || props.variant === "info" ? "status" : "alert"}
+      class="relative flex w-full justify-between p-4 text-ctp-base"
       classList={{
+        "animate-slide-in": !props.leaving,
+        "animate-slide-out": props.leaving,
         "bg-ctp-green-500": props.variant === "positive",
         "bg-ctp-red-500": props.variant === "negative",
         "bg-ctp-yellow-500": props.variant === "warning",
         "bg-ctp-mauve-500": props.variant === "info",
+      }}
+      onAnimationEnd={() => {
+        if (props.leaving) props.onRemoved();
       }}
     >
       <span>{props.text}</span>
@@ -46,7 +39,7 @@ const Toast = (props: ToastProps): HTMLElement => {
         <button
           class="absolute top-3 right-3 bottom-3 aspect-square rounded-md border border-transparent text-xl text-ctp-base hover:border-ctp-base"
           aria-label="Dismiss"
-          onclick={() => props.dismiss()}
+          onClick={() => props.dismiss()}
         >
           x
         </button>

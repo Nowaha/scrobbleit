@@ -8,5 +8,5 @@
     "className",
     "classList"
   ],
-  "tailwindStylesheet": "./src/public/index.css"
+  "tailwindStylesheet": "./src/index.css"
 }

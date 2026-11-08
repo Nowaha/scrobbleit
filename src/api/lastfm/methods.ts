@@ -50,7 +50,9 @@ export type LastFmUserGetRecentTracksParameters = {
   to?: number;
   extended?: 0 | 1;
 };
-export type LastFmUserGetRecentTracksResponse = { recenttracks: { track: LastFmRecentTrack[] } };
+export type LastFmUserGetRecentTracksResponse = {
+  recenttracks: { track: LastFmRecentTrack[] };
+};
 export type LastFmUserGetRecentTracksRequest = LastFmRequest<
   LastFmUserGetRecentTracksParameters,
   LastFmUserGetRecentTracksResponse
