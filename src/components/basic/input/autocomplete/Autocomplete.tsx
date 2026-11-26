@@ -26,12 +26,20 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
   const [dismissed, setDismissed] = createSignal(false);
   const [activeIndex, setActiveIndex] = createSignal(-1);
 
+  let skipNextValueChange = false;
+
   const [query, setQuery] = createSignal(untrack(() => props.value.trim()));
   const setQueryDebounced = debounce((value: string) => setQuery(value), 300);
   createEffect(
     on(
       () => props.value.trim(),
-      (value) => setQueryDebounced(value),
+      (value) => {
+        if (skipNextValueChange) {
+          skipNextValueChange = false;
+          return;
+        }
+        setQueryDebounced(value);
+      },
       { defer: true },
     ),
   );
@@ -58,6 +66,7 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
   const select = (index: number) => {
     const result = results()[index];
     if (result === undefined) return;
+    skipNextValueChange = true;
     props.onResultSelected?.(result);
     setDismissed(true);
   };
