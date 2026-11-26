@@ -23,6 +23,7 @@
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-solid": "^0.20.1",
+    "happy-dom": "^21.0.4",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "solid-devtools": "^0.34.3",
