@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
@@ -10,5 +11,11 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+  },
+  test: {
+    environment: "node",
+    env: {
+      VITE_BACKEND_URL: "http://backend.test",
+    },
   },
 });
