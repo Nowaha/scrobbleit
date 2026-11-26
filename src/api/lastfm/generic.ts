@@ -1,12 +1,12 @@
+import type { Result } from "../result.ts";
+
 export type LastFmError = {
   error: number;
   message: string;
 };
 
 export type LastFmParameters = Record<string, string | number | boolean>;
-export type LastFmResponseError = { success: false; data: never; error: LastFmError };
-export type LastFmResponseSuccess<T> = { success: true; data: T; error: never };
-export type LastFmResponse<T> = LastFmResponseSuccess<T> | LastFmResponseError;
+export type LastFmResponse<T> = Result<T, LastFmError>;
 
 export type LastFmRequest<P extends LastFmParameters, T> = (parameters: P) => Promise<LastFmResponse<T>>;
 

@@ -1,5 +1,5 @@
 import { batch } from "solid-js";
-import { backendApi } from "../api/backend/backend.ts";
+import { backendApi, describeBackendError } from "../api/backend/backend.ts";
 import { lastFmApi } from "../api/lastfm/lastfm.ts";
 import { toasts } from "../service/toastService.ts";
 import { checkCallback } from "../util/callback.ts";
@@ -26,7 +26,7 @@ export const handleAuthCallback = async (): Promise<void> => {
 
   const session = await backendApi.getSession({ token });
   if (!session.success) {
-    toasts.error(`Login failed: ${session.error.error?.message ?? session.error.code}`);
+    toasts.error(`Login failed: ${describeBackendError(session.error)}`);
     return;
   }
 

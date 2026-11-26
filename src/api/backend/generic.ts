@@ -1,16 +1,16 @@
+import type { Result } from "../result.ts";
+
 export type BackendParameters = Record<string, string | number | boolean>;
-type BackendError = {
+export type BackendError = {
   code: number;
-  error: BackendErrorDetails;
+  error?: BackendErrorDetails;
 };
 type BackendErrorDetails = {
   error_type: "upstream_error" | "invalid_auth" | "bad_request";
   message: string;
 };
 
-export type BackendResponseSuccess<T> = { success: true; data: T; error: never };
-export type BackendResponseError = { success: false; data: never; error: BackendError };
-export type BackendResponse<T> = BackendResponseSuccess<T> | BackendResponseError;
+export type BackendResponse<T> = Result<T, BackendError>;
 
 export type BackendRequest<P extends BackendParameters, T> = (parameters: P) => Promise<BackendResponse<T>>;
 

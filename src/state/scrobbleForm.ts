@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { backendApi } from "../api/backend/backend.ts";
+import { backendApi, describeBackendError } from "../api/backend/backend.ts";
 import { toasts } from "../service/toastService.ts";
 import { lastFmKey } from "./auth.ts";
 
@@ -83,7 +83,7 @@ export const submitScrobbleForm = async (): Promise<void> => {
       album_artist: optional(values.albumArtist),
     });
     if (!result.success) {
-      toasts.error(`Scrobble failed: ${result.error.error?.message ?? result.error.code}`);
+      toasts.error(`Scrobble failed: ${describeBackendError(result.error)}`);
       console.error(result.error);
       return;
     }

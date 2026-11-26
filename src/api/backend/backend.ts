@@ -1,5 +1,6 @@
 import type { BackendApi } from "./api.ts";
-import type { BackendParameters, BackendRequest, BackendResponseError, BackendResponseSuccess } from "./generic.ts";
+import { fail, ok } from "../result.ts";
+import type { BackendError, BackendParameters, BackendRequest } from "./generic.ts";
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_URL ?? `http://${window.location.hostname}:3001`;
 
@@ -13,12 +14,14 @@ const postJson =
     });
     if (!response.ok) {
       const errorDetails = await response.json().catch(() => undefined);
-      return { success: false, error: { code: response.status, error: errorDetails } } as BackendResponseError;
+      return fail({ code: response.status, error: errorDetails });
     }
-    return { success: true, data: await response.json() } as BackendResponseSuccess<T>;
+    return ok(await response.json());
   };
 
 export const backendApi: BackendApi = {
   getSession: postJson("/auth"),
   scrobble: postJson("/scrobble"),
 };
+
+export const describeBackendError = (error: BackendError): string => error.error?.message ?? `HTTP ${error.code}`;

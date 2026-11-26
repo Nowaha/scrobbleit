@@ -1,5 +1,6 @@
 import type { LastFmApi } from "./api.ts";
-import type { LastFmParameters, LastFmRequest, LastFmResponseError, LastFmResponseSuccess } from "./generic.ts";
+import { fail, ok } from "../result.ts";
+import type { LastFmParameters, LastFmRequest } from "./generic.ts";
 
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
 const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
@@ -25,9 +26,9 @@ const basicRequest =
     const json = await response.json();
 
     if (!response.ok || json.error) {
-      return { success: false, error: json } as LastFmResponseError;
+      return fail(json);
     }
-    return { success: true, data: json } as LastFmResponseSuccess<T>;
+    return ok(json);
   };
 
 export const lastFmApi: LastFmApi = {
