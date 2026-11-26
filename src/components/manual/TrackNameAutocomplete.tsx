@@ -38,8 +38,8 @@ const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props)
   return (
     <AutocompleteInput
       id={props.id}
-      label="Track name"
-      placeholder="Track name"
+      label="Track Name"
+      placeholder="Track Name"
       value={props.value}
       error={props.error}
       onInput={props.onInput}
