@@ -1,6 +1,6 @@
 export const timeAgo = (date: number): string => {
   const now = new Date().getTime() / 1000;
-  const passed = now - date;
+  const passed = Math.floor(now - date);
 
   if (passed < 60) return `${passed}s ago`;
   if (passed < 3600) {
