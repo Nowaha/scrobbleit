@@ -5,16 +5,16 @@ export const dateFormat = new Intl.DateTimeFormat(undefined, {
   timeStyle: "short",
 });
 
-export const debounce = <Args extends unknown[], Return>(
-  fn: (...args: Args) => Return,
-  delay: number,
-): ((...args: Args) => void) => {
-  let timer: ReturnType<typeof setTimeout>;
+export type Debounced<Args extends unknown[]> = ((...args: Args) => void) & { cancel: () => void };
 
-  return (...args: Args) => {
+export const debounce = <Args extends unknown[]>(fn: (...args: Args) => void, delay: number): Debounced<Args> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  const debounced = (...args: Args): void => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn(...args);
-    }, delay);
+    timer = setTimeout(() => fn(...args), delay);
   };
+  debounced.cancel = (): void => clearTimeout(timer);
+
+  return debounced;
 };

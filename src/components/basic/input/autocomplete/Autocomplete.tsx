@@ -1,8 +1,10 @@
-import { createEffect, createResource, createSignal, on, untrack, type JSX } from "solid-js";
+import { createEffect, createResource, createSignal, on, onCleanup, untrack, type JSX } from "solid-js";
 import { debounce } from "../../../../util/util.ts";
 import Field from "../../Field.tsx";
 import AutocompleteSuggestions from "./AutocompleteSuggestions.tsx";
 import AutocompleteTrigger from "./AutocompleteTrigger.tsx";
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 type AutocompleteProps<T> = {
   id: string;
@@ -30,7 +32,8 @@ const Autocomplete = <T,>(props: AutocompleteProps<T>): JSX.Element => {
   let skipNextValueChange = false;
 
   const [query, setQuery] = createSignal(untrack(() => props.value.trim()));
-  const setQueryDebounced = debounce((value: string) => setQuery(value), 300);
+  const setQueryDebounced = debounce((value: string) => setQuery(value), SEARCH_DEBOUNCE_MS);
+  onCleanup(setQueryDebounced.cancel);
   createEffect(
     on(
       () => props.value.trim(),
