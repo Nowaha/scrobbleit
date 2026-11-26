@@ -1,6 +1,7 @@
-import { Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import {
   clearManualForm,
+  clearManualFormErrors,
   hasManualEntries,
   manualForm,
   setManualError,
@@ -11,18 +12,35 @@ import { focusNextInputOnEnter } from "../../util/focus.ts";
 import Button from "../basic/Button.tsx";
 import Section from "../basic/Section.tsx";
 import ControlledInput from "../ControlledInput.tsx";
-import SpinningCircle from "../SpinningCircle.tsx";
 import ScrobbleButton from "./ScrobbleButton.tsx";
 import TrackNameAutocomplete from "./TrackNameAutocomplete.tsx";
 
 const ManualSection = () => {
   let artistNameInput!: HTMLInputElement;
 
+  const [submitting, setSubmitting] = createSignal(false);
+
   const albumArtistPlaceholder = () => manualForm.values.artist.trim() || "Album Artist";
 
   const handleSubmit = () => {
-    if (!manualForm.values.track.trim()) setManualError("track", "Track name is required");
-    if (!manualForm.values.artist.trim()) setManualError("artist", "Artist name is required");
+    if (submitting()) return;
+
+    clearManualFormErrors();
+
+    let valid = true;
+
+    if (!manualForm.values.track.trim()) {
+      setManualError("track", "Track name is required");
+      valid = false;
+    }
+    if (!manualForm.values.artist.trim()) {
+      setManualError("artist", "Artist name is required");
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    setSubmitting(true);
   };
 
   return (
@@ -43,6 +61,7 @@ const ManualSection = () => {
             setManualForm("errors", { track: undefined, artist: undefined });
             artistNameInput.focus();
           }}
+          disabled={submitting()}
         />
         <ControlledInput
           id="artistName"
@@ -52,6 +71,7 @@ const ManualSection = () => {
           error={manualForm.errors.artist}
           onInput={(v) => setManualField("artist", v)}
           required
+          disabled={submitting()}
           ref={(el) => (artistNameInput = el)}
         />
         <ControlledInput
@@ -61,6 +81,7 @@ const ManualSection = () => {
           value={manualForm.values.album}
           error={manualForm.errors.album}
           onInput={(v) => setManualField("album", v)}
+          disabled={submitting()}
         />
         <ControlledInput
           id="albumArtist"
@@ -69,16 +90,16 @@ const ManualSection = () => {
           error={manualForm.errors.albumArtist}
           onInput={(v) => setManualField("albumArtist", v)}
           placeholder={albumArtistPlaceholder()}
+          disabled={submitting()}
         />
         <div class="flex w-full justify-end gap-4">
           <Show when={hasManualEntries()}>
-            <Button variant="secondary" type="reset" onClick={clearManualForm}>
+            <Button variant="secondary" type="reset" onClick={clearManualForm} disabled={submitting()}>
               Clear
             </Button>
           </Show>
           <div>
-            <SpinningCircle />
-            <ScrobbleButton onClick={handleSubmit} />
+            <ScrobbleButton onClick={handleSubmit} loading={submitting()} />
           </div>
         </div>
       </div>
