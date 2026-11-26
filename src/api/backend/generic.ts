@@ -23,3 +23,39 @@ export type BackendGetSessionResponse = {
   subscriber: number;
 };
 export type BackendGetSessionRequest = BackendRequest<BackendGetSessionParameters, BackendGetSessionResponse>;
+
+export type BackendScrobbleParameters = {
+  session_key: string;
+  track_name: string;
+  artist_name: string;
+  timestamp: number;
+  album_name?: string;
+  album_artist?: string;
+};
+type LastFmCorrectedText = {
+  corrected: "0" | "1";
+  "#text"?: string;
+};
+
+type LastFmScrobble = {
+  artist: LastFmCorrectedText;
+  album: LastFmCorrectedText;
+  albumArtist: LastFmCorrectedText;
+  track: LastFmCorrectedText;
+  ignoredMessage: {
+    code: string;
+    "#text"?: string;
+  };
+  timestamp: string;
+};
+
+export type BackendScrobbleResponse = {
+  scrobbles: {
+    "@attr": {
+      accepted: number;
+      ignored: number;
+    };
+    scrobble: LastFmScrobble;
+  };
+};
+export type BackendScrobbleRequest = BackendRequest<BackendScrobbleParameters, BackendScrobbleResponse>;
