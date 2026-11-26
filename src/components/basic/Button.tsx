@@ -11,7 +11,8 @@ type ButtonProps = {
 const classes: Record<Variant, string> = {
   primary:
     "bg-ctp-mauve text-ctp-base border-2 border-ctp-mauve hover:bg-ctp-base hover:text-ctp-mauve disabled:bg-ctp-surface0 disabled:border-ctp-surface1 disabled:text-ctp-subtext0",
-  secondary: "bg-ctp-base text-ctp-text border border-ctp-subtext0 hover:bg-ctp-surface0",
+  secondary:
+    "bg-ctp-base text-ctp-text border border-ctp-subtext0 hover:bg-ctp-surface0 disabled:bg-ctp-surface0 disabled:border-ctp-surface1 disabled:text-ctp-subtext0",
   transparent: "", // TODO
 };
 
