@@ -23,7 +23,7 @@ const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>) => 
     <div
       id={props.id}
       role="listbox"
-      class="absolute top-full z-10 flex max-h-64 min-w-96 flex-col gap-0.5 overflow-y-auto rounded-sm bg-ctp-surface0 p-px"
+      class="absolute top-full z-10 flex max-h-64 flex-col gap-0.5 overflow-y-auto rounded-sm bg-ctp-surface0 p-px max-lg:right-0 max-lg:left-0 lg:min-w-96"
       classList={{ hidden: !props.visible }}
       onMouseDown={(e) => e.preventDefault()}
     >
