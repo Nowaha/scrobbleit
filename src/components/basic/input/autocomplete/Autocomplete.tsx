@@ -11,6 +11,7 @@ type AutocompleteInputProps<T> = {
   placeholder: string;
   error?: string;
   value: string;
+  disabled?: boolean;
   onInput: (value: string) => void;
   search: (query: string) => Promise<T[]>;
   renderItem: (result: T) => JSX.Element;
@@ -124,6 +125,7 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
         error={props.error}
         placeholder={props.placeholder}
         required={props.required}
+        disabled={props.disabled}
         expanded={open()}
         activeDescendant={open() && activeIndex() >= 0 ? optionId(activeIndex()) : undefined}
         onInput={handleInput}

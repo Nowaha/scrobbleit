@@ -16,6 +16,7 @@ type TrackNameAutocompleteProps = {
   error?: string;
   onInput: (value: string) => void;
   onResultSelected?: (result: SearchResult) => void;
+  disabled?: boolean;
 };
 
 const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props) => {
@@ -43,6 +44,7 @@ const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props)
       error={props.error}
       onInput={props.onInput}
       required
+      disabled={props.disabled}
       search={search}
       renderItem={(result) => (
         <Recommendation

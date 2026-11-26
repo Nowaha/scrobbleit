@@ -9,6 +9,7 @@ export type AutocompleteTriggerProps = {
   value: string;
   error?: string;
   expanded: boolean;
+  disabled?: boolean;
   activeDescendant?: string;
   onInput: (value: string) => void;
   onFocusChange: (focused: boolean) => void;
@@ -30,6 +31,7 @@ const AutocompleteTrigger: VoidComponent<AutocompleteTriggerProps> = (props) => 
     required={props.required}
     value={props.value}
     error={props.error}
+    disabled={props.disabled}
     onInput={(e) => props.onInput(e.currentTarget.value)}
     onFocusIn={() => props.onFocusChange(true)}
     onFocusOut={() => props.onFocusChange(false)}
