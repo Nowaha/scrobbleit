@@ -27,7 +27,7 @@ const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props)
       console.error(`Error: ${response.error.error} - ${response.error.message}`);
       return [];
     }
-    return response.data.results.trackmatches.track.slice(0, 5).map((t) => ({
+    return response.data.results.trackmatches.track.slice(0, 10).map((t) => ({
       name: t.name,
       artist: t.artist,
       listeners: Number(t.listeners),

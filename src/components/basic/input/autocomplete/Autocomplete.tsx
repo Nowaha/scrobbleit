@@ -23,10 +23,11 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
   const optionId = (index: number) => `${props.id}-option-${index}`;
 
   const [isFocused, setIsFocused] = createSignal(false);
-  const [activeIndex, setActiveIndex] = createSignal(0);
+  const [dismissed, setDismissed] = createSignal(false);
+  const [activeIndex, setActiveIndex] = createSignal(-1);
 
   const [query, setQuery] = createSignal(untrack(() => props.value.trim()));
-  const setQueryDebounced = debounce(setQuery, 300);
+  const setQueryDebounced = debounce((value: string) => setQuery(value), 300);
   createEffect(
     on(
       () => props.value.trim(),
@@ -36,8 +37,9 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
   );
 
   const [searchResults] = createResource(
-    query,
-    async (q) => {
+    () => ({ q: query() }),
+    async ({ q }) => {
+      if (!q) return [];
       try {
         return await props.search(q);
       } catch (e) {
@@ -48,30 +50,59 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
     { initialValue: [] },
   );
 
-  // An empty query yields no source, so the resource keeps its last value; hide it explicitly.
-  const results = () => (query() ? searchResults.latest : []);
-  const open = () => isFocused() && results().length > 0;
+  const results = () => searchResults.latest;
+  const open = () => isFocused() && !dismissed() && results().length > 0;
 
-  createEffect(on(results, () => setActiveIndex(0)));
+  createEffect(on(results, () => setActiveIndex(-1)));
 
   const select = (index: number) => {
     const result = results()[index];
-    if (result !== undefined) props.onResultSelected?.(result);
+    if (result === undefined) return;
+    props.onResultSelected?.(result);
+    setDismissed(true);
+  };
+
+  const handleInput = (value: string) => {
+    setDismissed(false);
+    props.onInput(value);
+  };
+
+  const handleFocusChange = (focused: boolean) => {
+    setIsFocused(focused);
+    if (focused) setDismissed(false);
   };
 
   const onKeyDown = (e: KeyboardEvent) => {
     const count = results().length;
     if (count === 0) return;
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.min(i + 1, count - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      select(activeIndex());
+    if (!open()) {
+      if (e.key === "ArrowDown" && isFocused()) {
+        e.preventDefault();
+        setDismissed(false);
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((i) => Math.min(i + 1, count - 1));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((i) => Math.max(i - 1, 0));
+        break;
+      case "Enter":
+        if (activeIndex() >= 0) {
+          e.preventDefault();
+          select(activeIndex());
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        setDismissed(true);
+        break;
     }
   };
 
@@ -85,19 +116,20 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
         placeholder={props.placeholder}
         required={props.required}
         expanded={open()}
-        activeDescendant={open() ? optionId(activeIndex()) : undefined}
-        onInput={props.onInput}
-        onFocusChange={setIsFocused}
+        activeDescendant={open() && activeIndex() >= 0 ? optionId(activeIndex()) : undefined}
+        onInput={handleInput}
+        onFocusChange={handleFocusChange}
         onKeyDown={onKeyDown}
       />
       <AutocompleteSuggestions
         id={listboxId()}
-        visible={isFocused()}
+        visible={open()}
         results={results()}
         activeIndex={activeIndex()}
         optionId={optionId}
         renderItem={props.renderItem}
         onSelect={select}
+        onHover={setActiveIndex}
       />
     </Field>
   );
