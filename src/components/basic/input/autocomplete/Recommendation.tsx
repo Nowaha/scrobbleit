@@ -1,5 +1,6 @@
 import { createResource, Show, type VoidComponent } from "solid-js";
 import { numberFormat } from "../../../../util/util.ts";
+import SpinningCircle from "../../../SpinningCircle.tsx";
 
 type RecommendationProps = {
   artist: string;
@@ -17,7 +18,7 @@ const Recommendation: VoidComponent<RecommendationProps> = (props) => {
         when={imageUrl.latest}
         fallback={
           <div class="flex h-7.5 w-7.5 items-center justify-center rounded-lg">
-            <div class="cpi h-4 w-4" />
+            <SpinningCircle />
           </div>
         }
       >
