@@ -7,11 +7,13 @@ import { fillScrobbleForm } from "../../state/scrobbleForm.ts";
 import Section from "../basic/Section.tsx";
 import RecentTrack from "./RecentTrack.tsx";
 
+const RECENT_TRACKS_LIMIT = 10;
+
 const RecentSection = (): JSX.Element => {
   const [recentTracks] = createResource(
     () => session()?.name,
     async (user) => {
-      const res = await lastFmApi.user.getRecentTracks({ user, limit: 10 });
+      const res = await lastFmApi.user.getRecentTracks({ user, limit: RECENT_TRACKS_LIMIT });
       if (!res.success) {
         toasts.error(`Couldn't load recent tracks: ${res.error.message}`);
         return [];
