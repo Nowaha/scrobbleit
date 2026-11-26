@@ -1,6 +1,6 @@
-export const numberFormat = new Intl.NumberFormat("nl-NL");
+export const numberFormat = new Intl.NumberFormat();
 
-export const dateFormat = new Intl.DateTimeFormat("en-GB", {
+export const dateFormat = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
   timeStyle: "short",
 });
