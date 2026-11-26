@@ -125,6 +125,7 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
         id={listboxId()}
         visible={open()}
         results={results()}
+        loading={searchResults.loading}
         activeIndex={activeIndex()}
         optionId={optionId}
         renderItem={props.renderItem}

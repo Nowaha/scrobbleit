@@ -1,8 +1,10 @@
-import { createEffect, For, type JSX } from "solid-js";
+import { createEffect, For, Show, type JSX } from "solid-js";
+import SpinningCircle from "../../../SpinningCircle.tsx";
 
 type AutocompleteSuggestionsProps<T> = {
   id: string;
   visible: boolean;
+  loading: boolean;
   results: T[];
   activeIndex: number;
   optionId: (index: number) => string;
@@ -25,6 +27,11 @@ const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>) => 
       classList={{ hidden: !props.visible }}
       onMouseDown={(e) => e.preventDefault()}
     >
+      <Show when={props.loading}>
+        <div class="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black/25">
+          <SpinningCircle />
+        </div>
+      </Show>
       <For each={props.results}>
         {(result, i) => (
           <div
