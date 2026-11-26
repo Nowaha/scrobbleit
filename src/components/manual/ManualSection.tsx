@@ -74,10 +74,10 @@ const ManualSection = () => {
 
   return (
     <Section
-      id="manualSection"
+      id="scrobbleTrackSection"
       icon="fa-pencil"
-      title="Manual"
-      description="Manually enter the details of the track you'd like to scrobble."
+      title="Scrobble Track"
+      description="Enter the details of the track you'd like to scrobble."
     >
       <div id="manualForm" class="flex flex-col gap-3" onKeyDown={focusNextInputOnEnter}>
         <TrackNameAutocomplete
