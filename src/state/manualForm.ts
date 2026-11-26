@@ -31,6 +31,13 @@ export const fillManualForm = (data: { track: string; artist: string; album?: st
 
 export const clearManualForm = () => setManualForm(emptyForm());
 
+export const clearManualFormErrors = () => {
+  setManualForm({
+    values: manualForm.values,
+    errors: emptyForm().errors,
+  });
+};
+
 export const hasManualEntries = () =>
   Object.values(manualForm.values).some((v) => v !== "") ||
   Object.values(manualForm.errors).some((e) => e !== undefined);
