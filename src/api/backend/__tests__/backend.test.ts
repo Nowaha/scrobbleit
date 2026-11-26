@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { backendApi, describeBackendError } from "./backend.ts";
+import { backendApi, describeBackendError } from "../backend.ts";
 
 const fetchMock = vi.fn<typeof fetch>();
 
