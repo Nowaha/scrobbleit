@@ -1,6 +1,6 @@
 import { batch } from "solid-js";
-import { getBackendApi } from "../api/backend/backend.ts";
-import { getLastFmApi } from "../api/lastfm/lastfm.ts";
+import { backendApi } from "../api/backend/backend.ts";
+import { lastFmApi } from "../api/lastfm/lastfm.ts";
 import { toasts } from "../service/toastService.ts";
 import { checkCallback } from "../util/callback.ts";
 import { createPersistedSignal } from "../util/persistedSignal.ts";
@@ -24,7 +24,7 @@ export const handleAuthCallback = async (): Promise<void> => {
     return;
   }
 
-  const session = await getBackendApi().getSession({ token });
+  const session = await backendApi.getSession({ token });
   if (!session.success) {
     toasts.error(`Login failed: ${session.error.error?.message ?? session.error.code}`);
     return;
@@ -47,7 +47,7 @@ export const fetchProfileImage = async (username: string): Promise<string | unde
 
   toasts.info("Fetching profile picture...");
   try {
-    const info = await getLastFmApi().user.getInfo({ user: username });
+    const info = await lastFmApi.user.getInfo({ user: username });
     if (!info.success) {
       throw info.error;
     }

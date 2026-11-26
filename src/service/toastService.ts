@@ -42,5 +42,3 @@ export const toasts = {
   warning: (text: string, options?: ToastOptions) => push("warning", text, options),
   info: (text: string, options?: ToastOptions) => push("info", text, options),
 };
-
-export const useToasts = (): typeof toasts => toasts;

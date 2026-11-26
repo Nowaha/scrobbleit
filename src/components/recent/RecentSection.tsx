@@ -1,16 +1,13 @@
 import { createResource, For, type JSX } from "solid-js";
 import type { LastFmRecentTrack } from "../../api/lastfm/generic.ts";
-import { getLastFmApi } from "../../api/lastfm/lastfm.ts";
-import { useToasts } from "../../service/toastService.ts";
+import { lastFmApi } from "../../api/lastfm/lastfm.ts";
+import { toasts } from "../../service/toastService.ts";
 import { lastFmName } from "../../state/auth.ts";
 import { fillScrobbleForm } from "../../state/scrobbleForm.ts";
 import Section from "../basic/Section.tsx";
 import RecentTrack from "./RecentTrack.tsx";
 
 const RecentSection = (): JSX.Element => {
-  const toasts = useToasts();
-  const lastFmApi = getLastFmApi();
-
   const [recentTracks] = createResource(
     () => lastFmName() ?? false,
     async (user) => {

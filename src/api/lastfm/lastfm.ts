@@ -1,11 +1,5 @@
 import type { LastFmApi } from "./api.ts";
-import type { LastFmParameters, LastFmResponse, LastFmResponseError, LastFmResponseSuccess } from "./generic.ts";
-import type {
-  LastFmArtistSearchRequest,
-  LastFmTrackSearchRequest,
-  LastFmUserGetInfoRequest,
-  LastFmUserGetRecentTracksRequest,
-} from "./methods.ts";
+import type { LastFmParameters, LastFmRequest, LastFmResponseError, LastFmResponseSuccess } from "./generic.ts";
 
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
 const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
@@ -24,29 +18,27 @@ const makeLastFmRequest = (method: string, parameters: LastFmParameters): Promis
   return fetch(`${LAST_FM_API_URL}?${urlParameters}`);
 };
 
-export const basicRequest = <R>(method: string): R =>
-  (async (parameters: LastFmParameters): Promise<LastFmResponse<unknown>> => {
+const basicRequest =
+  <P extends LastFmParameters, T>(method: string): LastFmRequest<P, T> =>
+  async (parameters) => {
     const response = await makeLastFmRequest(method, parameters);
     const json = await response.json();
 
     if (!response.ok || json.error) {
       return { success: false, error: json } as LastFmResponseError;
     }
-    return { success: true, data: json } as LastFmResponseSuccess<unknown>;
-  }) as R;
+    return { success: true, data: json } as LastFmResponseSuccess<T>;
+  };
 
-const initLastFmApi = (): LastFmApi => ({
+export const lastFmApi: LastFmApi = {
   track: {
-    search: basicRequest<LastFmTrackSearchRequest>("track.search"),
+    search: basicRequest("track.search"),
   },
   artist: {
-    search: basicRequest<LastFmArtistSearchRequest>("artist.search"),
+    search: basicRequest("artist.search"),
   },
   user: {
-    getInfo: basicRequest<LastFmUserGetInfoRequest>("user.getInfo"),
-    getRecentTracks: basicRequest<LastFmUserGetRecentTracksRequest>("user.getRecentTracks"),
+    getInfo: basicRequest("user.getInfo"),
+    getRecentTracks: basicRequest("user.getRecentTracks"),
   },
-});
-
-const lastFmApi = initLastFmApi();
-export const getLastFmApi = (): LastFmApi => lastFmApi;
+};

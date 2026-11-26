@@ -1,6 +1,6 @@
 import type { VoidComponent } from "solid-js";
 import { fetchImageUrl } from "../../api/iTunes.ts";
-import { getLastFmApi } from "../../api/lastfm/lastfm.ts";
+import { lastFmApi } from "../../api/lastfm/lastfm.ts";
 import Autocomplete from "../basic/input/autocomplete/Autocomplete.tsx";
 import Recommendation from "./Recommendation.tsx";
 
@@ -20,8 +20,6 @@ type TrackNameAutocompleteProps = {
 };
 
 const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props) => {
-  const lastFmApi = getLastFmApi();
-
   const search = async (query: string): Promise<SearchResult[]> => {
     const response = await lastFmApi.track.search({ track: query });
     if (!response.success) {

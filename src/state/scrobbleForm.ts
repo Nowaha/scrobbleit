@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { getBackendApi } from "../api/backend/backend.ts";
+import { backendApi } from "../api/backend/backend.ts";
 import { toasts } from "../service/toastService.ts";
 import { lastFmKey } from "./auth.ts";
 
@@ -74,7 +74,7 @@ export const submitScrobbleForm = async (): Promise<void> => {
   setIsSubmitting(true);
   try {
     const { values } = scrobbleForm;
-    const result = await getBackendApi().scrobble({
+    const result = await backendApi.scrobble({
       session_key: sessionKey,
       track_name: values.track,
       artist_name: values.artist,
