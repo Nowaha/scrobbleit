@@ -18,6 +18,3 @@ export const debounce = <Args extends unknown[], Return>(
     }, delay);
   };
 };
-
-export const trackToId = (track: string, artist: string) =>
-  `${artist.replace(/ /g, "").toLowerCase()}-${track.replace(/ /g, "").toLowerCase()}`;
