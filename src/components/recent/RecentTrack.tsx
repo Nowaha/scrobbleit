@@ -3,6 +3,7 @@ import type { LastFmRecentTrack } from "../../api/lastfm/generic.ts";
 import { timeAgo } from "../../util/time.ts";
 import Button from "../basic/Button.tsx";
 import Icon from "../basic/Icon.tsx";
+import NowPlayingBars from "./NowPlayingBars.tsx";
 
 const LARGE_IMAGE_INDEX = 2;
 
@@ -34,15 +35,11 @@ const RecentTrack = (props: RecentTrackProps): JSX.Element => (
     <div class="ml-auto flex gap-1 align-bottom group-focus-within:hidden group-hover:hidden">
       <Switch>
         <Match when={props.track["@attr"]?.nowplaying}>
-          <div class="bars">
-            <div class="bar" />
-            <div class="bar" />
-            <div class="bar" />
-          </div>
+          <NowPlayingBars />
           <span class="text-sm text-ctp-subtext0">Now</span>
         </Match>
         <Match when={props.track.date}>
-          {(date) => <span class="text-sm text-ctp-subtext0">{timeAgo(date().uts)}</span>}
+          {(date) => <span class="text-sm text-ctp-subtext0">{timeAgo(Number(date().uts))}</span>}
         </Match>
       </Switch>
     </div>
