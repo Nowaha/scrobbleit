@@ -14,19 +14,21 @@ export type LastFmOpenSearchQuery = {
   "#text": string;
   role: string;
   searchTerms: string;
-  startPage: number;
+  startPage: string;
 };
 
 export type LastFmQueryResponse<T> = {
   results: {
     "opensearch:Query": LastFmOpenSearchQuery;
-    "opensearch:totalResults": number;
-    "opensearch:startIndex": number;
-    "opensearch:itemsPerPage": number;
+    "opensearch:totalResults": string;
+    "opensearch:startIndex": string;
+    "opensearch:itemsPerPage": string;
   } & T;
 };
 
 export type MBID = string;
+
+export type LastFmNumericString = string;
 
 export type LastFmImage = {
   "#text": string;
@@ -36,8 +38,8 @@ export type LastFmImage = {
 export type LastFmEntity = {
   name: string;
   url: string;
-  streamable: number;
-  listeners: number;
+  streamable: LastFmNumericString;
+  listeners: LastFmNumericString;
   image: LastFmImage[];
   mbid: MBID;
 };
@@ -50,15 +52,15 @@ export type LastFmTrack = LastFmEntity & {
 
 export type LastFmRecentTrackCurrentlyPlaying = {
   "@attr": {
-    nowplaying: true;
+    nowplaying: "true";
   };
-  date: never;
+  date?: undefined;
 };
 
 export type LastFmRecentTrackScrobbled = {
-  "@attr": never;
+  "@attr"?: undefined;
   date: {
-    uts: number;
+    uts: LastFmNumericString;
     "#text": string;
   };
 };
@@ -70,23 +72,23 @@ export type LastFmRecentTrack = LastFmEntity & {
 
 export type LastFmUser = {
   spotify_expiry_estimate?: {
-    unixtime: number;
+    unixtime: LastFmNumericString;
     "#text": number;
   };
-  playcount: number;
-  playlists: number;
-  album_count: number;
-  bootstrap: number;
+  playcount: LastFmNumericString;
+  playlists: LastFmNumericString;
+  album_count: LastFmNumericString;
+  bootstrap: LastFmNumericString;
   url: string;
-  age: number;
+  age: LastFmNumericString;
   name: string;
-  artist_count: number;
-  subscriber: number;
-  track_count: number;
+  artist_count: LastFmNumericString;
+  subscriber: LastFmNumericString;
+  track_count: LastFmNumericString;
   realname: string;
   image: LastFmImage[];
   registered: {
-    unixtime: number;
+    unixtime: LastFmNumericString;
     "#text": number;
   };
   country: string;
