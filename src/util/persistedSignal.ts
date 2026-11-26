@@ -1,20 +1,28 @@
-import { createSignal, type Accessor, type Setter } from "solid-js";
+import { createSignal, type Accessor } from "solid-js";
 
-type Value = string | null;
-
-export const createPersistedSignal = (key: string, initial: Value = null): [Accessor<Value>, Setter<Value>] => {
+const readStoredValue = <T>(key: string, fallback: T): T => {
   const stored = localStorage.getItem(key);
-  const [value, setValue] = createSignal<Value>(stored ?? initial);
+  if (stored === null) {
+    return fallback;
+  }
+  try {
+    return JSON.parse(stored) as T;
+  } catch {
+    return fallback;
+  }
+};
 
-  const set = ((arg: Value | ((prev: Value) => Value)) => {
-    const next = setValue(arg);
-    if (next === null) {
+export const createPersistedSignal = <T>(key: string, fallback: T): [Accessor<T>, (value: T) => void] => {
+  const [value, setValue] = createSignal<T>(readStoredValue(key, fallback));
+
+  const setPersistedValue = (next: T): void => {
+    setValue(() => next);
+    if (next === null || next === undefined) {
       localStorage.removeItem(key);
     } else {
-      localStorage.setItem(key, next);
+      localStorage.setItem(key, JSON.stringify(next));
     }
-    return next;
-  }) as Setter<Value>;
+  };
 
-  return [value, set];
+  return [value, setPersistedValue];
 };

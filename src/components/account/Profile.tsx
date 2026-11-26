@@ -1,5 +1,5 @@
 import { createResource, Match, onCleanup, onMount, Switch, type JSX } from "solid-js";
-import { authTimeStamp, fetchProfileImage, lastFmName } from "../../state/auth.ts";
+import { fetchProfileImage, session } from "../../state/auth.ts";
 import { dateFormat } from "../../util/util.ts";
 import Icon from "../basic/Icon.tsx";
 import SpinningCircle from "../basic/SpinningCircle.tsx";
@@ -13,7 +13,7 @@ const clamp = (value: number, min: number, max: number): number => Math.max(min,
 const Profile = (): JSX.Element => {
   let imageElement: HTMLImageElement | undefined;
 
-  const [image] = createResource(lastFmName, fetchProfileImage);
+  const [image] = createResource(() => session()?.name, fetchProfileImage);
 
   onMount(() => {
     const onMouseMove = (e: MouseEvent): void => {
@@ -38,7 +38,7 @@ const Profile = (): JSX.Element => {
   });
 
   return (
-    <a class="group" href={`https://last.fm/user/${lastFmName() ?? ""}`} target="_blank">
+    <a class="group" href={`https://last.fm/user/${session()?.name ?? ""}`} target="_blank">
       <div class="flex gap-4">
         <div class="relative flex size-16 items-center justify-center">
           <Switch fallback={<Icon class="text-3xl text-ctp-subtext0" icon="fa-user" />}>
@@ -58,10 +58,10 @@ const Profile = (): JSX.Element => {
         </div>
         <div class="flex flex-col justify-evenly">
           <span class="flex items-center text-lg leading-0 font-bold text-ctp-text no-underline group-hover:text-ctp-mauve group-hover:underline">
-            {lastFmName()}
+            {session()?.name}
             <Icon class="mb-auto ml-1 text-[10px]" icon="fa-external-link" />
           </span>
-          <span class="text-md leading-0 text-ctp-subtext0">{dateFormat.format(Number(authTimeStamp()))}</span>
+          <span class="text-md leading-0 text-ctp-subtext0">{dateFormat.format(session()?.authenticatedAt)}</span>
         </div>
       </div>
     </a>

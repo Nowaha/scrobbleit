@@ -2,14 +2,14 @@ import { createResource, For, type JSX } from "solid-js";
 import type { LastFmRecentTrack } from "../../api/lastfm/generic.ts";
 import { lastFmApi } from "../../api/lastfm/lastfm.ts";
 import { toasts } from "../../service/toastService.ts";
-import { lastFmName } from "../../state/auth.ts";
+import { session } from "../../state/auth.ts";
 import { fillScrobbleForm } from "../../state/scrobbleForm.ts";
 import Section from "../basic/Section.tsx";
 import RecentTrack from "./RecentTrack.tsx";
 
 const RecentSection = (): JSX.Element => {
   const [recentTracks] = createResource(
-    () => lastFmName() ?? false,
+    () => session()?.name,
     async (user) => {
       const res = await lastFmApi.user.getRecentTracks({ user, limit: 10 });
       if (!res.success) {

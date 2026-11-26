@@ -2,7 +2,7 @@ import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { backendApi, describeBackendError } from "../api/backend/backend.ts";
 import { toasts } from "../service/toastService.ts";
-import { lastFmKey } from "./auth.ts";
+import { session } from "./auth.ts";
 
 export type ScrobbleFormField = "track" | "artist" | "album" | "albumArtist";
 
@@ -65,7 +65,7 @@ export const submitScrobbleForm = async (): Promise<void> => {
     return;
   }
 
-  const sessionKey = lastFmKey();
+  const sessionKey = session()?.key;
   if (!sessionKey) {
     toasts.error("Scrobble failed: you are not logged in");
     return;
