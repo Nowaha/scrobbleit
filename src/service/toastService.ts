@@ -22,7 +22,7 @@ export { toastList };
 
 let nextId = 0;
 
-const push = (variant: ToastVariant, text: string, options: ToastOptions = {}) =>
+const push = (variant: ToastVariant, text: string, options: ToastOptions = {}): void =>
   setToastList(toastList.length, {
     id: nextId++,
     variant,
@@ -32,9 +32,9 @@ const push = (variant: ToastVariant, text: string, options: ToastOptions = {}) =
     leaving: false,
   });
 
-export const dismissToast = (id: number) => setToastList((t) => t.id === id, "leaving", true);
+export const dismissToast = (id: number): void => setToastList((t) => t.id === id, "leaving", true);
 
-export const removeToast = (id: number) => setToastList((list) => list.filter((t) => t.id !== id));
+export const removeToast = (id: number): void => setToastList((list) => list.filter((t) => t.id !== id));
 
 export const toasts = {
   success: (text: string, options?: ToastOptions) => push("positive", text, options),
@@ -43,4 +43,4 @@ export const toasts = {
   info: (text: string, options?: ToastOptions) => push("info", text, options),
 };
 
-export const useToasts = () => toasts;
+export const useToasts = (): typeof toasts => toasts;

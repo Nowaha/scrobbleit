@@ -16,6 +16,12 @@ export default defineConfig(
     },
     rules: {
       "import/extensions": ["error", "always", { ignorePackages: true }],
+      "import/no-unresolved": "error",
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "separate-type-imports" }],
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        { allowExpressions: true, allowTypedFunctionExpressions: true, allowHigherOrderFunctions: true },
+      ],
     },
   },
   {

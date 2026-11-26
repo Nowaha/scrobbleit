@@ -1,13 +1,13 @@
-import { createResource, For } from "solid-js";
+import { createResource, For, type JSX } from "solid-js";
 import type { LastFmRecentTrack } from "../../api/lastfm/generic.ts";
 import { getLastFmApi } from "../../api/lastfm/lastfm.ts";
 import { useToasts } from "../../service/toastService.ts";
 import { lastFmName } from "../../state/auth.ts";
-import { fillManualForm } from "../../state/manualForm.ts";
+import { fillScrobbleForm } from "../../state/scrobbleForm.ts";
 import Section from "../basic/Section.tsx";
 import RecentTrack from "./RecentTrack.tsx";
 
-const RecentSection = () => {
+const RecentSection = (): JSX.Element => {
   const toasts = useToasts();
   const lastFmApi = getLastFmApi();
 
@@ -24,8 +24,8 @@ const RecentSection = () => {
     { initialValue: [] },
   );
 
-  const onCopy = (track: LastFmRecentTrack) => {
-    fillManualForm({
+  const onCopy = (track: LastFmRecentTrack): void => {
+    fillScrobbleForm({
       track: track.name,
       artist: track.artist["#text"],
       album: track.album?.["#text"],
@@ -33,7 +33,7 @@ const RecentSection = () => {
     toasts.info(`Copied "${track.artist["#text"]} - ${track.name}" to form`, { timeout: "short" });
   };
 
-  const onScrobble = (track: LastFmRecentTrack) => {
+  const onScrobble = (track: LastFmRecentTrack): void => {
     toasts.success(`Scrobbled ${track.artist["#text"]} - ${track.name}`);
   };
 

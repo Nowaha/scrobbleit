@@ -1,6 +1,6 @@
 import { mergeProps, type JSX, type ParentComponent } from "solid-js";
+import { cx } from "../../util/cx.ts";
 import Icon from "./Icon.tsx";
-import Spacer from "./Spacer.tsx";
 
 type SectionProps = {
   id: string;
@@ -26,13 +26,11 @@ const Section: ParentComponent<SectionProps> = (rawProps) => {
 
   return (
     <section id={props.id}>
-      <h3 class={`flex items-center gap-2 ${props.titleSize} font-bold ${props.titleColor}`}>
+      <h3 class={cx("flex items-center gap-2 font-bold", props.titleSize, props.titleColor)}>
         <Icon icon={props.icon} />
         {props.title}
       </h3>
-      <Spacer size="sm" />
-      <p class={`${props.descriptionSize} ${props.descriptionColor}`}>{props.description}</p>
-      <Spacer />
+      <p class={cx("mt-1 mb-2", props.descriptionSize, props.descriptionColor)}>{props.description}</p>
       {props.children}
     </section>
   );

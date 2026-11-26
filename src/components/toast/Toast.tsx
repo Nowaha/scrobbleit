@@ -1,4 +1,4 @@
-import { onCleanup, Show, untrack } from "solid-js";
+import { onCleanup, Show, untrack, type JSX } from "solid-js";
 import { toastTimeouts, type ToastTimeout, type ToastVariant } from "../../service/toastService.ts";
 
 export type { ToastInfo, ToastTimeout, ToastVariant } from "../../service/toastService.ts";
@@ -13,7 +13,7 @@ type ToastProps = {
   onRemoved: () => void;
 };
 
-const Toast = (props: ToastProps) => {
+const Toast = (props: ToastProps): JSX.Element => {
   const timeout = untrack(() => toastTimeouts[props.timeout ?? "medium"]);
   const timer = setTimeout(() => props.dismiss(), timeout);
   onCleanup(() => clearTimeout(timer));

@@ -1,5 +1,6 @@
 import { Show, splitProps, type JSX, type ParentComponent } from "solid-js";
-import SpinningCircle from "../SpinningCircle.tsx";
+import { cx } from "../../util/cx.ts";
+import SpinningCircle from "./SpinningCircle.tsx";
 
 type Variant = "primary" | "secondary" | "transparent";
 
@@ -21,10 +22,14 @@ const Button: ParentComponent<ButtonProps> = (props) => {
 
   return (
     <button
-      class={`flex h-fit w-fit flex-row items-center gap-1 rounded-lg px-3 py-1.5 transition-colors duration-100 disabled:cursor-not-allowed ${classes[local.variant]} ${local.class ?? ""}`}
+      class={cx(
+        "flex h-fit w-fit flex-row items-center gap-1 rounded-lg px-3 py-1.5 transition-colors duration-100 disabled:cursor-not-allowed",
+        classes[local.variant],
+        local.class,
+      )}
       {...rest}
     >
-      <Show when={props.loading}>
+      <Show when={local.loading}>
         <SpinningCircle size="md" />
       </Show>
       {local.children}

@@ -1,7 +1,8 @@
+import type { JSX } from "solid-js";
 import Link from "../basic/Link.tsx";
 import Section from "../basic/Section.tsx";
 
-const InfoSection = () => (
+const InfoSection = (): JSX.Element => (
   <Section
     id="info"
     icon="fa-heart"

@@ -1,14 +1,12 @@
-export const focusNext = (el: HTMLElement) => {
-  const focusable = Array.from(
-    document.querySelectorAll<HTMLElement>('input, button, select, textarea, [tabindex]:not([tabindex="-1"])'),
-  );
-  const index = focusable.indexOf(el);
-  focusable[index + 1]?.focus();
-};
-
-export const focusNextInputOnEnter = (e: KeyboardEvent & { currentTarget: HTMLElement }) => {
-  if (e.key !== "Enter") return;
+export const focusNextInputOnEnter = (e: KeyboardEvent & { currentTarget: HTMLElement }): void => {
+  if (e.key !== "Enter" || e.defaultPrevented || !(e.target instanceof HTMLInputElement)) {
+    return;
+  }
   const inputs = Array.from(e.currentTarget.getElementsByTagName("input"));
-  const i = inputs.indexOf(e.target as HTMLInputElement);
-  if (i !== -1) inputs[(i + 1) % inputs.length].focus();
+  const index = inputs.indexOf(e.target);
+  if (index === -1) {
+    return;
+  }
+  e.preventDefault();
+  inputs[(index + 1) % inputs.length].focus();
 };

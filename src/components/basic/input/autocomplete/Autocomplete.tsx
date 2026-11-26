@@ -1,10 +1,10 @@
 import { createEffect, createResource, createSignal, on, untrack, type JSX } from "solid-js";
 import { debounce } from "../../../../util/util.ts";
-import Field from "../../../basic/Field.tsx";
-import AutocompleteSuggestions from "./AutocompleteSuggestion.tsx";
+import Field from "../../Field.tsx";
+import AutocompleteSuggestions from "./AutocompleteSuggestions.tsx";
 import AutocompleteTrigger from "./AutocompleteTrigger.tsx";
 
-type AutocompleteInputProps<T> = {
+type AutocompleteProps<T> = {
   id: string;
   label: string;
   required?: boolean;
@@ -18,10 +18,10 @@ type AutocompleteInputProps<T> = {
   onResultSelected?: (result: T) => void;
 };
 
-const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
-  const triggerId = () => `${props.id}-trigger`;
-  const listboxId = () => `${props.id}-autocomplete`;
-  const optionId = (index: number) => `${props.id}-option-${index}`;
+const Autocomplete = <T,>(props: AutocompleteProps<T>): JSX.Element => {
+  const triggerId = (): string => `${props.id}-trigger`;
+  const listboxId = (): string => `${props.id}-autocomplete`;
+  const optionId = (index: number): string => `${props.id}-option-${index}`;
 
   const [isFocused, setIsFocused] = createSignal(false);
   const [dismissed, setDismissed] = createSignal(false);
@@ -59,12 +59,12 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
     { initialValue: [] },
   );
 
-  const results = () => searchResults.latest;
-  const open = () => isFocused() && !dismissed() && results().length > 0;
+  const results = (): T[] => searchResults.latest;
+  const open = (): boolean => isFocused() && !dismissed() && results().length > 0;
 
   createEffect(on(results, () => setActiveIndex(-1)));
 
-  const select = (index: number) => {
+  const select = (index: number): void => {
     const result = results()[index];
     if (result === undefined) return;
     skipNextValueChange = true;
@@ -72,17 +72,17 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
     setDismissed(true);
   };
 
-  const handleInput = (value: string) => {
+  const handleInput = (value: string): void => {
     setDismissed(false);
     props.onInput(value);
   };
 
-  const handleFocusChange = (focused: boolean) => {
+  const handleFocusChange = (focused: boolean): void => {
     setIsFocused(focused);
     if (focused) setDismissed(false);
   };
 
-  const onKeyDown = (e: KeyboardEvent) => {
+  const onKeyDown = (e: KeyboardEvent): void => {
     const count = results().length;
     if (count === 0) return;
 
@@ -147,4 +147,4 @@ const AutocompleteInput = <T,>(props: AutocompleteInputProps<T>) => {
   );
 };
 
-export default AutocompleteInput;
+export default Autocomplete;

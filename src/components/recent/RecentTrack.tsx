@@ -1,8 +1,10 @@
-import { createSignal, Show } from "solid-js";
+import { Match, Switch, type JSX } from "solid-js";
 import type { LastFmRecentTrack } from "../../api/lastfm/generic.ts";
 import { timeAgo } from "../../util/time.ts";
 import Button from "../basic/Button.tsx";
 import Icon from "../basic/Icon.tsx";
+
+const LARGE_IMAGE_INDEX = 2;
 
 type RecentTrackProps = {
   track: LastFmRecentTrack;
@@ -10,64 +12,49 @@ type RecentTrackProps = {
   onCopy: () => void;
 };
 
-const RecentTrack = (props: RecentTrackProps) => {
-  const [hovered, setHovered] = createSignal(false);
-  const isNowPlaying = () => !!props.track["@attr"]?.nowplaying;
-
-  return (
-    <div
-      class="flex items-center gap-2 rounded-md p-2 hover:bg-ctp-surface0"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <img class="size-10 rounded-md" src={props.track.image[2]["#text"]} />
-      <div class="flex items-center gap-1">
-        <div class="flex flex-col">
-          <a
-            class="text text-sm font-bold text-ctp-text hover:text-ctp-mauve hover:underline"
-            href={props.track.url}
-            target="_blank"
-          >
-            {props.track.name}
-          </a>
-          <a
-            class="text-sm text-ctp-subtext0 hover:text-ctp-mauve hover:underline"
-            href={`https://www.last.fm/music/${props.track.artist["#text"]}`}
-            target="_blank"
-          >
-            {props.track.artist["#text"]}
-          </a>
-        </div>
-      </div>
-      <Show
-        when={hovered()}
-        fallback={
-          <Show
-            when={isNowPlaying()}
-            fallback={<span class="ml-auto text-sm text-ctp-subtext0">{timeAgo(props.track.date.uts)}</span>}
-          >
-            <div class="ml-auto flex justify-end gap-1 align-bottom">
-              <div class="bars">
-                <div class="bar" />
-                <div class="bar" />
-                <div class="bar" />
-              </div>
-              <span class="ml-auto text-sm text-ctp-subtext0">Now</span>
-            </div>
-          </Show>
-        }
+const RecentTrack = (props: RecentTrackProps): JSX.Element => (
+  <div class="group flex items-center gap-2 rounded-md p-2 hover:bg-ctp-surface0">
+    <img class="size-10 rounded-md" src={props.track.image[LARGE_IMAGE_INDEX]["#text"]} />
+    <div class="flex flex-col">
+      <a
+        class="text-sm font-bold text-ctp-text hover:text-ctp-mauve hover:underline"
+        href={props.track.url}
+        target="_blank"
       >
-        <div class="ml-auto flex gap-1">
-          <Button variant="secondary" onClick={() => props.onCopy()}>
-            <Icon icon="fa-copy" />
-          </Button>
-          <Button variant="primary" onClick={() => props.onScrobble()}>
-            <Icon icon="fa-record-vinyl" />
-          </Button>
-        </div>
-      </Show>
+        {props.track.name}
+      </a>
+      <a
+        class="text-sm text-ctp-subtext0 hover:text-ctp-mauve hover:underline"
+        href={`https://www.last.fm/music/${props.track.artist["#text"]}`}
+        target="_blank"
+      >
+        {props.track.artist["#text"]}
+      </a>
     </div>
-  );
-};
+    <div class="ml-auto flex gap-1 align-bottom group-focus-within:hidden group-hover:hidden">
+      <Switch>
+        <Match when={props.track["@attr"]?.nowplaying}>
+          <div class="bars">
+            <div class="bar" />
+            <div class="bar" />
+            <div class="bar" />
+          </div>
+          <span class="text-sm text-ctp-subtext0">Now</span>
+        </Match>
+        <Match when={props.track.date}>
+          {(date) => <span class="text-sm text-ctp-subtext0">{timeAgo(date().uts)}</span>}
+        </Match>
+      </Switch>
+    </div>
+    <div class="ml-auto hidden gap-1 group-focus-within:flex group-hover:flex">
+      <Button variant="secondary" onClick={() => props.onCopy()}>
+        <Icon icon="fa-copy" />
+      </Button>
+      <Button variant="primary" onClick={() => props.onScrobble()}>
+        <Icon icon="fa-record-vinyl" />
+      </Button>
+    </div>
+  </div>
+);
 
 export default RecentTrack;

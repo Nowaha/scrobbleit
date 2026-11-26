@@ -1,4 +1,5 @@
-import { mergeProps, VoidComponent } from "solid-js";
+import { mergeProps, type VoidComponent } from "solid-js";
+import { cx } from "../../util/cx.ts";
 
 type Size = "sm" | "md" | "lg" | "xl";
 
@@ -7,12 +8,12 @@ type SpinningCircleProps = {
   size?: Size;
 };
 
-const SpinningCircle: VoidComponent<SpinningCircleProps> = (rawProps: SpinningCircleProps) => {
-  const props = mergeProps({ variant: "normal", size: "md" }, rawProps);
+const SpinningCircle: VoidComponent<SpinningCircleProps> = (rawProps) => {
+  const props = mergeProps({ size: "md" as Size }, rawProps);
 
   return (
     <div
-      class={`animate-spin rounded-full border-2 border-ctp-surface1 border-t-ctp-mauve ${props.class ?? ""}`}
+      class={cx("animate-spin rounded-full border-2 border-ctp-surface1 border-t-ctp-mauve", props.class)}
       classList={{
         "size-3": props.size === "sm",
         "size-4": props.size === "md",

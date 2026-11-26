@@ -1,9 +1,9 @@
+import type { JSX } from "solid-js";
 import Link from "../basic/Link.tsx";
 import Section from "../basic/Section.tsx";
-import Spacer from "../basic/Spacer.tsx";
 import LastFmButton from "./LastFmButton.tsx";
 
-const LoginSection = () => (
+const LoginSection = (): JSX.Element => (
   <Section
     id="loginSection"
     icon="fa-key"
@@ -19,10 +19,10 @@ const LoginSection = () => (
       </span>
     }
   >
-    <Spacer />
-    <p class="text-ctp-mauve">Please click the button below to go to Last.fm's website and authorize yourself.</p>
-    <Spacer size="lg" />
-    <LastFmButton />
+    <div class="mt-2 flex flex-col items-start gap-4">
+      <p class="text-ctp-mauve">Please click the button below to go to Last.fm's website and authorize yourself.</p>
+      <LastFmButton />
+    </div>
   </Section>
 );
 

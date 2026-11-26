@@ -1,8 +1,8 @@
-import { For } from "solid-js";
+import { For, type JSX } from "solid-js";
 import { dismissToast, removeToast, toastList } from "../../service/toastService.ts";
 import Toast from "./Toast.tsx";
 
-const ToastLayer = () => (
+const ToastLayer = (): JSX.Element => (
   <ul
     id="toast-region"
     role="region"

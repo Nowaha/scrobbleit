@@ -1,9 +1,9 @@
-import {
+import type {
   LastFmArtistSearchRequest,
   LastFmTrackSearchRequest,
   LastFmUserGetInfoRequest,
   LastFmUserGetRecentTracksRequest,
-} from "./methods.tsx";
+} from "./methods.ts";
 
 export type LastFmApi = {
   track: {

@@ -1,8 +1,9 @@
+import type { JSX } from "solid-js";
 import Link from "../basic/Link.tsx";
 
-const Divider = () => <span>-</span>;
+const Divider = (): JSX.Element => <span>-</span>;
 
-const Footer = () => (
+const Footer = (): JSX.Element => (
   <footer class="align-center flex w-full items-center justify-center gap-2 border-t border-ctp-surface0 bg-ctp-crust p-4">
     <span>s.crobble.it 2026</span>
     <Divider />

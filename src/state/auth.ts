@@ -1,4 +1,4 @@
-import { batch, createEffect, on, untrack } from "solid-js";
+import { batch } from "solid-js";
 import { getBackendApi } from "../api/backend/backend.ts";
 import { getLastFmApi } from "../api/lastfm/lastfm.ts";
 import { toasts } from "../service/toastService.ts";
@@ -7,10 +7,10 @@ import { createPersistedSignal } from "../util/persistedSignal.ts";
 
 export const [lastFmKey, setLastFmKey] = createPersistedSignal("lastFmKey");
 export const [lastFmName, setLastFmName] = createPersistedSignal("lastFmName");
-export const [lastFmImage, setLastFmImage] = createPersistedSignal("lastFmImage");
+const [lastFmImage, setLastFmImage] = createPersistedSignal("lastFmImage");
 export const [authTimeStamp, setAuthTimeStamp] = createPersistedSignal("authTimeStamp");
 
-export const signOut = () =>
+export const signOut = (): void =>
   batch(() => {
     setAuthTimeStamp(null);
     setLastFmImage(null);
@@ -18,9 +18,11 @@ export const signOut = () =>
     setLastFmName(null);
   });
 
-export const handleAuthCallback = async () => {
+export const handleAuthCallback = async (): Promise<void> => {
   const token = checkCallback();
-  if (!token) return;
+  if (!token) {
+    return;
+  }
 
   const session = await getBackendApi().getSession({ token });
   if (!session.success) {
@@ -37,26 +39,25 @@ export const handleAuthCallback = async () => {
   });
 };
 
-createEffect(
-  on(lastFmName, (username) => {
-    if (!username || untrack(lastFmImage)) return;
+export const fetchProfileImage = async (username: string): Promise<string | undefined> => {
+  const cached = lastFmImage();
+  if (cached) {
+    return cached;
+  }
 
-    toasts.info("Fetching profile picture...");
-
-    getLastFmApi()
-      .user.getInfo({ user: username })
-      .then((info) => {
-        if (info.success) {
-          setLastFmImage(info.data.user.image.at(-1)?.["#text"] || null);
-          toasts.success("Loaded profile picture!");
-        } else {
-          toasts.error("Failed to load profile picture.");
-          console.error(info);
-        }
-      })
-      .catch((err) => {
-        toasts.error("Failed to load profile picture.");
-        console.error(err);
-      });
-  }),
-);
+  toasts.info("Fetching profile picture...");
+  try {
+    const info = await getLastFmApi().user.getInfo({ user: username });
+    if (!info.success) {
+      throw info.error;
+    }
+    const image = info.data.user.image.at(-1)?.["#text"] || null;
+    setLastFmImage(image);
+    toasts.success("Loaded profile picture!");
+    return image ?? undefined;
+  } catch (error) {
+    toasts.error("Failed to load profile picture.");
+    console.error(error);
+    return undefined;
+  }
+};

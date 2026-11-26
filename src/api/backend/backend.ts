@@ -1,5 +1,5 @@
-import { BackendApi } from "./api.tsx";
-import {
+import type { BackendApi } from "./api.ts";
+import type {
   BackendGetSessionRequest,
   BackendGetSessionResponse,
   BackendResponseError,
@@ -8,7 +8,7 @@ import {
   BackendScrobbleResponse,
 } from "./generic.ts";
 
-const BACKEND_BASE_URL = "http://localhost:3001";
+const BACKEND_BASE_URL = `http://${window.location.hostname}:3001`;
 
 export const getSession: BackendGetSessionRequest = async ({ token }) => {
   const res = await fetch(BACKEND_BASE_URL + "/auth", {
@@ -44,4 +44,4 @@ const initBackendApi = (): BackendApi => ({
 });
 
 const backendApi = initBackendApi();
-export const getBackendApi = () => backendApi;
+export const getBackendApi = (): BackendApi => backendApi;

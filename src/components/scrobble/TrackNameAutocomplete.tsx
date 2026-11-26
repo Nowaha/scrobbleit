@@ -1,8 +1,8 @@
 import type { VoidComponent } from "solid-js";
 import { fetchImageUrl } from "../../api/iTunes.ts";
 import { getLastFmApi } from "../../api/lastfm/lastfm.ts";
-import AutocompleteInput from "../basic/input/autocomplete/Autocomplete.tsx";
-import Recommendation from "../basic/input/autocomplete/Recommendation.tsx";
+import Autocomplete from "../basic/input/autocomplete/Autocomplete.tsx";
+import Recommendation from "./Recommendation.tsx";
 
 export type SearchResult = {
   name: string;
@@ -36,7 +36,7 @@ const TrackNameAutocomplete: VoidComponent<TrackNameAutocompleteProps> = (props)
   };
 
   return (
-    <AutocompleteInput
+    <Autocomplete
       id={props.id}
       label="Track Name"
       placeholder="Track Name"

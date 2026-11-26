@@ -1,20 +1,20 @@
-import { LastFmApi } from "./api.tsx";
-import { LastFmParameters, LastFmResponseError, LastFmResponseSuccess } from "./generic.ts";
-import {
+import type { LastFmApi } from "./api.ts";
+import type { LastFmParameters, LastFmResponse, LastFmResponseError, LastFmResponseSuccess } from "./generic.ts";
+import type {
   LastFmArtistSearchRequest,
   LastFmTrackSearchRequest,
   LastFmUserGetInfoRequest,
   LastFmUserGetRecentTracksRequest,
-} from "./methods.tsx";
+} from "./methods.ts";
 
 const LAST_FM_API_URL = "https://ws.audioscrobbler.com/2.0";
 const LAST_FM_API_KEY = "9f13628487188e6e5727c9b99e30b9a8";
-const LAST_FM_AUTH_CALLBACK = "http://localhost:3000";
+const LAST_FM_AUTH_CALLBACK = window.location.origin;
 const LAST_FM_AUTH_URL = "http://www.last.fm/api/auth/?api_key=" + LAST_FM_API_KEY + "&cb=" + LAST_FM_AUTH_CALLBACK;
 
-export const getLastFmAuthUrl = () => LAST_FM_AUTH_URL;
+export const getLastFmAuthUrl = (): string => LAST_FM_AUTH_URL;
 
-const makeLastFmRequest = (method: string, parameters: LastFmParameters) => {
+const makeLastFmRequest = (method: string, parameters: LastFmParameters): Promise<Response> => {
   const urlParameters = new URLSearchParams({
     method,
     format: "json",
@@ -25,7 +25,7 @@ const makeLastFmRequest = (method: string, parameters: LastFmParameters) => {
 };
 
 export const basicRequest = <R>(method: string): R =>
-  (async (parameters: LastFmParameters) => {
+  (async (parameters: LastFmParameters): Promise<LastFmResponse<unknown>> => {
     const response = await makeLastFmRequest(method, parameters);
     const json = await response.json();
 
@@ -49,4 +49,4 @@ const initLastFmApi = (): LastFmApi => ({
 });
 
 const lastFmApi = initLastFmApi();
-export const getLastFmApi = () => lastFmApi;
+export const getLastFmApi = (): LastFmApi => lastFmApi;

@@ -1,7 +1,8 @@
+import type { JSX } from "solid-js";
 import { getLastFmAuthUrl } from "../../api/lastfm/lastfm.ts";
 import Icon from "../basic/Icon.tsx";
 
-const LastFmButton = () => (
+const LastFmButton = (): JSX.Element => (
   <button
     id="lastfmLogin"
     class="flex cursor-pointer items-center gap-2 rounded-lg border-3 border-[#D51007] bg-[#D51007] px-3 py-3 text-white shadow-md shadow-ctp-crust transition-colors duration-100 hover:bg-ctp-base"

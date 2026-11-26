@@ -1,5 +1,5 @@
 import { createEffect, For, Show, type JSX } from "solid-js";
-import SpinningCircle from "../../../SpinningCircle.tsx";
+import SpinningCircle from "../../SpinningCircle.tsx";
 
 type AutocompleteSuggestionsProps<T> = {
   id: string;
@@ -13,7 +13,7 @@ type AutocompleteSuggestionsProps<T> = {
   onHover: (index: number) => void;
 };
 
-const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>) => {
+const AutocompleteSuggestions = <T,>(props: AutocompleteSuggestionsProps<T>): JSX.Element => {
   createEffect(() => {
     if (!props.visible || props.activeIndex < 0) return;
     document.getElementById(props.optionId(props.activeIndex))?.scrollIntoView({ block: "nearest" });
