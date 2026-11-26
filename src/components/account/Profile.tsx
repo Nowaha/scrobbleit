@@ -1,7 +1,8 @@
-import { onCleanup, onMount } from "solid-js";
+import { onCleanup, onMount, Show } from "solid-js";
 import { authTimeStamp, lastFmImage, lastFmName } from "../../state/auth.ts";
 import { dateFormat } from "../../util/util.ts";
 import Icon from "../basic/Icon.tsx";
+import SpinningCircle from "../SpinningCircle.tsx";
 
 const Profile = () => {
   let imageElement!: HTMLImageElement;
@@ -31,11 +32,22 @@ const Profile = () => {
     <a class="group" href={`https://last.fm/user/${lastFmName() ?? ""}`} target="_blank">
       <div class="flex gap-4">
         <div class="relative size-16">
-          <img
-            class="absolute rounded-xl shadow-lg shadow-ctp-mantle transition-[scale] group-hover:scale-105"
-            src={lastFmImage() ?? undefined}
-            ref={imageElement}
-          />
+          <Show
+            when={lastFmImage()}
+            fallback={
+              <div class="flex size-full items-center justify-center">
+                <SpinningCircle size="lg" />
+              </div>
+            }
+          >
+            {(image) => (
+              <img
+                class="absolute rounded-xl shadow-lg shadow-ctp-mantle transition-[scale] group-hover:scale-105"
+                src={image()}
+                ref={imageElement}
+              />
+            )}
+          </Show>
         </div>
         <div class="flex flex-col justify-evenly">
           <span class="flex items-center text-lg leading-0 font-bold text-ctp-text no-underline group-hover:text-ctp-mauve group-hover:underline">

@@ -1,4 +1,4 @@
-import { batch } from "solid-js";
+import { batch, createEffect, on, untrack } from "solid-js";
 import { getBackendApi } from "../api/backend/backend.ts";
 import { getLastFmApi } from "../api/lastfm/lastfm.ts";
 import { toasts } from "../service/toastService.ts";
@@ -28,14 +28,35 @@ export const handleAuthCallback = async () => {
     return;
   }
 
+  toasts.success(`Logged in as ${session.data.name}!`);
+
   batch(() => {
     setLastFmKey(session.data.key);
     setLastFmName(session.data.name);
     setAuthTimeStamp(String(Date.now()));
   });
-
-  const info = await getLastFmApi().user.getInfo({ user: session.data.name });
-  if (info.success) setLastFmImage(info.data.user.image.at(-1)?.["#text"] ?? null);
-
-  toasts.success(`Logged in as ${session.data.name}`);
 };
+
+createEffect(
+  on(lastFmName, (username) => {
+    if (!username || untrack(lastFmImage)) return;
+
+    toasts.info("Fetching profile picture...");
+
+    getLastFmApi()
+      .user.getInfo({ user: username })
+      .then((info) => {
+        if (info.success) {
+          setLastFmImage(info.data.user.image.at(-1)?.["#text"] || null);
+          toasts.success("Loaded profile picture!");
+        } else {
+          toasts.error("Failed to load profile picture.");
+          console.error(info);
+        }
+      })
+      .catch((err) => {
+        toasts.error("Failed to load profile picture.");
+        console.error(err);
+      });
+  }),
+);
