@@ -1,12 +1,13 @@
-import { createResource, Show, type VoidComponent } from "solid-js";
+import { createResource, Match, Show, Switch, type VoidComponent } from "solid-js";
 import { numberFormat } from "../../util/util.ts";
+import Icon from "../basic/Icon.tsx";
 import SpinningCircle from "../basic/SpinningCircle.tsx";
 
 type RecommendationProps = {
   artist: string;
   track: string;
   listeners: number;
-  imageUrlFetcher: () => Promise<string>;
+  imageUrlFetcher: () => Promise<string | undefined>;
 };
 
 const Recommendation: VoidComponent<RecommendationProps> = (props) => {
@@ -14,16 +15,14 @@ const Recommendation: VoidComponent<RecommendationProps> = (props) => {
 
   return (
     <div class="flex items-center justify-center gap-2 p-2 text-sm text-ctp-mauve">
-      <Show
-        when={imageUrl.latest}
-        fallback={
-          <div class="flex h-7.5 w-7.5 items-center justify-center rounded-lg">
+      <div class="flex size-7.5 shrink-0 items-center justify-center rounded-lg">
+        <Switch fallback={<Icon class="text-ctp-subtext0" icon="fa-music" />}>
+          <Match when={imageUrl.loading}>
             <SpinningCircle />
-          </div>
-        }
-      >
-        {(src) => <img width={30} height={30} src={src()} class="rounded-lg" />}
-      </Show>
+          </Match>
+          <Match when={imageUrl()}>{(src) => <img width={30} height={30} src={src()} class="rounded-lg" />}</Match>
+        </Switch>
+      </div>
       <div class="flex grow flex-col justify-center">
         <Show when={props.track}>
           <span>{props.track}</span>
