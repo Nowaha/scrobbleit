@@ -20,7 +20,7 @@ const TextInput: VoidComponent<TextInputProps> = (rawProps) => {
     <input
       type="text"
       class={cx(
-        "placeholder-ctp-text-overlay1 w-full rounded-md border px-3 py-2 text-ctp-text outline-none focus:border-ctp-mauve focus:ring-2 focus:ring-ctp-mauve",
+        "w-full rounded-md border px-3 py-2 text-ctp-text placeholder-ctp-overlay1 outline-none focus:border-ctp-mauve focus:ring-2 focus:ring-ctp-mauve",
         props.class,
       )}
       classList={{
